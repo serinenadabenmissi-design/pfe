@@ -1,0 +1,12 @@
+# YOLO Segmentation Dataset Configuration
+# Generated from FOODAI4 dataset - Top 50 classes
+
+# Dataset paths
+train: /kaggle/input/datasets/mmydz999/aidataset/FoodInsSeg/images/train
+val: /kaggle/input/datasets/mmydz999/aidataset/FoodInsSeg/images/val
+test: /kaggle/input/datasets/mmydz999/aidataset/FoodInsSeg/images/test
+   # test images (relative to 'path')
+
+nc: 50
+
+names: ['carrot', 'French beans', 'potato', 'chicken duck', 'corn', 'broccoli', 'tomato', 'steak', 'bread', 'strawberry', 'green beans', 'french fries', 'pork', 'cilantro mint', 'noodles', 'lettuce', 'cucumber', 'pasta', 'onion', 'rice', 'asparagus', 'sauce', 'pepper', 'pie', 'blueberry', 'grape', 'shrimp', 'biscuit', 'cake', 'ice cream', 'celery stick', 'cherry', 'white button mushroom', 'sausage', 'lemon', 'fish', 'spring onion', 'other ingredients', 'shiitake', 'fried meat', 'cauliflower', 'egg', 'shellfish', 'cabbage', 'orange', 'pineapple', 'cheese butter', 'almond', 'pizza', 'soy']
