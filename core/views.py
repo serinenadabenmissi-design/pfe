@@ -12,6 +12,9 @@ def about_view(request):
 def feedback_view(request):
     return render(request, 'feedback.html')
 
+def contact_view(request):
+    return render(request, 'contact.html')
+
 def blog(request):
     return render(request, 'blog.html')
 

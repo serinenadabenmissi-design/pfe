@@ -506,6 +506,7 @@ def get_conversations(request):
     
     return Response(conversations)
 
+from nutritionists.models import DietPlan, Meal
 def generate_meal_checklist_for_plan(plan):
     """Génère la checklist des repas pour tous les jours du plan"""
     from nutritionists.models import PatientMealChecklist

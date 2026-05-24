@@ -1626,9 +1626,9 @@ nav {
   <a href="index.html" class="logo">NutriLife 🍎</a>
   <div class="menu-icon" onclick="toggleMenu()">☰</div>
   <nav id="navMenu">
-    <a href="{% url 'home' %}" class="active">Home</a>
-        <a href="{% url 'about' %}">About Us</a>
-        <a href="{% url 'feedback' %}">Feedback</a>
+    <a href="{% url 'home' %}" >Home</a>
+        <a href="{% url 'about' %}" class="active">About Us</a>
+        <a href="{% url 'contact' %}">Contact Us</a>
         <a href="{% url 'blog' %}">Blog</a>
   </nav>
   <button class="book-btn" onclick="window.location.href='{% url 'login' %}'"><a href="{% url 'login' %}">Book Consultation</a></button>
@@ -1725,7 +1725,7 @@ nav {
         <span class="cred-tag">AI Nutrition Integration</span>
         <span class="cred-tag">Certified Health Coach</span>
       </div>
-      <a href="#" class="btn-primary">Book a Session →</a>
+      <a href="{% url 'login' %}" class="btn-primary">Book a Session →</a>
     </div>
     <div class="bio-visual reveal">
       <div class="bio-img-wrap">
@@ -1923,8 +1923,8 @@ nav {
     <h2>Ready to start your <em>transformation</em>?</h2>
     <p>Book your first consultation and meet the nutritionist who will build your personal health strategy — from the very first session.</p>
     <div class="cta-btns">
-      <a href="#" class="btn-primary">Book a Consultation →</a>
-      <a href="index.html" class="btn-ghost-w">Back to Home</a>
+      <a href="{% url 'login' %}" class="btn-primary">Book a Consultation →</a>
+      <a href="{% url 'home' %}" class="btn-ghost-w">Back to Home</a>
     </div>
   </div>
 </section>
@@ -1946,11 +1946,11 @@ nav {
       <div class="footer-col">
         <h4>Navigation</h4>
         <ul class="footer-links">
-          <li><a href="index.html">🏠 Home</a></li>
-          <li><a href="about.html">📖 About Us</a></li>
-          <li><a href="#">📝 Blog</a></li>
-          <li><a href="#">⭐ Feedback</a></li>
-          <li><a href="#">📅 Book Consultation</a></li>
+          <li><a href="{% url 'home' %}">🏠 Home</a></li>
+          <li><a href="{% url 'about' %}">📖 About Us</a></li>
+          <li><a href="{% url 'blog' %}">📝 Blog</a></li>
+          <li><a href="{% url 'contact' %}">📬 Contact Us</a></li>
+          <li><a href="{% url 'login' %}">📅 Book Consultation</a></li>
         </ul>
       </div>
       <div class="footer-col">

@@ -578,7 +578,7 @@ nav a:hover::before, nav a.active::before { width: 100%; }
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, var(--orange), var(--green));
+  background: linear-gradient(135deg, var(--orange));
   color: white;
   border: none;
   padding: 14px 32px;
@@ -1021,10 +1021,10 @@ nav a:hover::before, nav a.active::before { width: 100%; }
 <header class="navbar">
   <a href="/" class="logo">NutriLife 🍎</a>
   <nav>
-    <a href="{% url 'home' %}" class="active">Home</a>
+    <a href="{% url 'home' %}" >Home</a>
         <a href="{% url 'about' %}">About Us</a>
-        <a href="{% url 'feedback' %}">Feedback</a>
-        <a href="{% url 'blog' %}">Blog</a>
+        <a href="{% url 'contact' %}">Contact Us</a>
+        <a href="{% url 'blog' %}" class="active">Blog</a>
   </nav>
   <button class="book-btn" onclick="window.location.href='{% url 'login' %}'"><a href="{% url 'login' %}">Book Consultation</a></button>
 </header>
