@@ -10,3 +10,4 @@ scikit-learn
 matplotlib
 django-cors-headers
 openai
+reportlab
