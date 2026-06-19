@@ -1,4 +1,5 @@
 Django>=4.2,<5.0
+djangorestframework
 gunicorn
 whitenoise
 dj-database-url
@@ -8,3 +9,4 @@ pandas
 scikit-learn
 matplotlib
 django-cors-headers
+openai
