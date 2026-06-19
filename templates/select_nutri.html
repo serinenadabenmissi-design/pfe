@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choisissez votre Nutritionniste — NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:        #27AE60;
+  --green-light:  #2ECC71;
+  --green-pale:   #F0F8F3;
+  --orange:       #FF7A00;
+  --orange-light: #FF9A40;
+  --dark:         #0f172a;
+  --text-mid:     #475569;
+  --text-light:   #94a3b8;
+  --border:       rgba(39,174,96,0.15);
+}
+
+html, body { height: 100%; font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.benefits-side {
+  width: 52%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+}
+.brand-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.brand-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(39,174,96,0.55) 0%, rgba(27,94,42,0.6) 100%),
+              radial-gradient(ellipse 65% 55% at 90% 10%, rgba(255,122,0,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.brand-logo {
+  position: relative; z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: white; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.brand-content {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0;
+  max-width: 400px;
+}
+.brand-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.72);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px; border-radius: 40px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
+  width: fit-content;
+}
+.brand-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--orange-light); border-radius: 50%; }
+.brand-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 2.8vw, 46px);
+  font-weight: 900; color: #fff;
+  line-height: 1.12; margin-bottom: 16px;
+}
+.brand-content h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.brand-desc { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 36px; max-width: 360px; }
+.feat-list { display: flex; flex-direction: column; gap: 10px; }
+.feat-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+.feat-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.feat-text strong { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.feat-text span { font-size: 11px; color: rgba(255,255,255,0.65); }
+.brand-float-card {
+  position: absolute; bottom: 44px; right: 28px; z-index: 5;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 18px;
+  padding: 16px 20px; text-align: center; min-width: 120px;
+  animation: floatY 5s ease-in-out infinite;
+}
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.float-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.float-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.10em; text-transform: uppercase; margin-top: 4px; }
+.brand-footer { position: relative; z-index: 2; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 20px; }
+
+.form-side {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 48px 56px;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+}
+.form-side::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--green));
+}
+.form-header { margin-bottom: 28px; text-align: center; }
+.form-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.form-header h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.form-header p { font-size: 14px; color: var(--text-mid); }
+
+.nutritionists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.nutritionist-card {
+  background: #f8fafc;
+  border-radius: 24px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.nutritionist-card:hover {
+  transform: translateY(-4px);
+  background: #f0fdf4;
+  box-shadow: 0 12px 24px -12px rgba(0,0,0,0.1);
+}
+
+.nutritionist-card.selected {
+  border-color: var(--green);
+  background: linear-gradient(135deg, rgba(39,174,96,0.08), rgba(255,122,0,0.02));
+  box-shadow: 0 8px 20px rgba(39,174,96,0.15);
+}
+
+.nutritionist-avatar {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--green), var(--orange));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+}
+
+.nutritionist-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+
+.nutritionist-specialty {
+  font-size: 12px;
+  color: var(--orange);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.nutritionist-bio {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.nutritionist-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+.nutritionist-stats span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-available {
+  background: var(--green-pale);
+  color: var(--green);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.badge-full {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-mid);
+  grid-column: 1 / -1;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f8fafc;
+  border-radius: 24px;
+  color: var(--text-mid);
+  grid-column: 1 / -1;
+}
+
+.empty-message .emoji {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.selected-summary-card {
+  background: linear-gradient(135deg, var(--green-pale), #ffffff);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.selected-nutritionist {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--green) 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+  transition: transform 0.18s, box-shadow 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(39,174,96,0.4);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+}
+
+.toast-msg {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #27AE60;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.toast-msg.show { opacity: 0.9; }
+.toast-msg.error { background: #dc2626; }
+
+@media (max-width: 1024px) {
+  .benefits-side { padding: 36px 32px; }
+  .form-side { padding: 40px 36px; }
+}
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .benefits-side { width: 100%; position: relative; height: auto; min-height: 45vh; padding: 32px 28px; }
+  .brand-float-card { display: none; }
+  .form-side { padding: 32px 28px; height: auto; overflow-y: visible; }
+  .nutritionists-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .benefits-side { padding: 24px 20px; }
+  .form-side { padding: 24px 20px; }
+  .brand-content h1 { font-size: 24px; }
+  .form-header h2 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<div class="benefits-side">
+  <img class="brand-photo" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&q=85" alt="Healthy lifestyle">
+  <div class="brand-overlay"></div>
+  <a href="/" class="brand-logo">NutriLife 🍎</a>
+  <div class="brand-content">
+    <div class="brand-eyebrow">Choose Your Expert</div>
+    <h1>Meet your <em>nutrition partner</em></h1>
+    <p class="brand-desc">Select a certified nutritionist who will guide you on your wellness journey with personalized care.</p>
+    <div class="feat-list">
+      <div class="feat-item"><div class="feat-icon">👩‍⚕️</div><div class="feat-text"><strong>Certified Experts</strong><span>Verified nutrition professionals</span></div></div>
+      <div class="feat-item"><div class="feat-icon">💬</div><div class="feat-text"><strong>Live Consultations</strong><span>Video calls & chat support</span></div></div>
+      <div class="feat-item"><div class="feat-icon">📋</div><div class="feat-text"><strong>Personalized Plans</strong><span>Tailored to your goals</span></div></div>
+    </div>
+  </div>
+  <div class="brand-float-card"><div class="float-num">EXPERT</div><div class="float-lbl">Guidance</div></div>
+  <div class="brand-footer">© 2026 NutriLife · Expert nutritionists</div>
+</div>
+
+<div class="form-side">
+  <div class="form-header">
+    <h2>Choose your <em>nutritionist</em> 🧑‍⚕️</h2>
+    <p>Select the expert who will accompany you throughout your journey</p>
+  </div>
+
+  <div id="nutritionistsGrid" class="nutritionists-grid">
+    <div class="loading-spinner">⏳ Loading available nutritionists...</div>
+  </div>
+
+  <div class="selected-summary-card">
+    <div class="selected-nutritionist" id="selectedNutritionistName">No nutritionist selected</div>
+    <div style="font-size: 13px; color: var(--text-mid);" id="selectedNutritionistInfo">Please select a nutritionist to continue</div>
+  </div>
+
+  <button class="confirm-btn" id="confirmBtn" disabled>
+    ✅ Confirm & Continue →
+  </button>
+
+  <div class="security-badge">
+    <span>🔒 Secure selection • Free to change later</span>
+    <span>💬 24/7 support available</span>
+  </div>
+</div>
+
+<div class="toast-msg" id="toastMsg"></div>
+
+<script>
+  let nutritionists = [];
+  let selectedNutritionist = null;
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.className = `toast-msg ${isError ? 'error' : ''}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  function getCSRFToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, 10) === 'csrftoken=') {
+          cookieValue = decodeURIComponent(cookie.substring(10));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  async function fetchAvailableNutritionists() {
+    const grid = document.getElementById('nutritionistsGrid');
+    grid.innerHTML = '<div class="loading-spinner">⏳ Loading available nutritionists...</div>';
+    
+    try {
+      const response = await fetch('/api/nutritionists/available/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch nutritionists');
+      }
+      
+      const data = await response.json();
+      nutritionists = data.nutritionists || [];
+      
+      if (nutritionists.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-message">
+            <div class="emoji">😔</div>
+            <h3>No nutritionists available at the moment</h3>
+            <p>All our experts are fully booked. Please check back later or contact support.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      renderNutritionists();
+      
+    } catch (error) {
+      console.error('Error fetching nutritionists:', error);
+      grid.innerHTML = `
+        <div class="empty-message">
+          <div class="emoji">⚠️</div>
+          <h3>Unable to load nutritionists</h3>
+          <p>Please check your connection and try again.</p>
+          <button onclick="fetchAvailableNutritionists()" style="margin-top: 16px; padding: 8px 20px; background: var(--green); color: white; border: none; border-radius: 30px; cursor: pointer;">Retry</button>
+        </div>
+      `;
+    }
+  }
+
+  function renderNutritionists() {
+    const grid = document.getElementById('nutritionistsGrid');
+    
+    grid.innerHTML = nutritionists.map(nut => {
+      // Valeurs par défaut pour éviter les null
+      const fullName = nut.full_name || 'Nutritionist';
+      const specialization = nut.specialization || 'Nutrition Specialist';
+      const bio = nut.bio || 'Expert nutritionist ready to help you achieve your health goals.';
+      const rating = nut.rating || '4.8';
+      const experience = nut.experience_years || '5';
+      const patientsCount = nut.patients_count || 0;
+      const maxPatients = nut.max_patients || 4;
+      const avatarColor = nut.avatar_color || '#27AE60';
+      
+      return `
+        <div class="nutritionist-card" data-id="${nut.id}" data-name="${escapeHtml(fullName)}" data-specialty="${escapeHtml(specialization)}">
+          <div class="nutritionist-avatar" style="background: linear-gradient(135deg, ${avatarColor}, ${avatarColor === '#27AE60' ? '#2ECC71' : '#FF9A40'});">
+            ${fullName.charAt(0)}
+          </div>
+          <div class="nutritionist-name">${escapeHtml(fullName)}</div>
+          <div class="nutritionist-specialty">${escapeHtml(specialization)}</div>
+          <div class="nutritionist-bio">${escapeHtml(bio.substring(0, 100))}${bio.length > 100 ? '...' : ''}</div>
+          <div class="nutritionist-stats">
+            <span>⭐ ${rating}</span>
+            <span>📅 ${experience} years</span>
+            <span>👥 ${patientsCount}/${maxPatients}</span>
+          </div>
+          ${patientsCount < maxPatients ? 
+            '<div class="badge-available">✓ Available</div>' : 
+            '<div class="badge-full">⚠️ Fully booked</div>'}
+        </div>
+      `;
+    }).join('');
+    
+    // Ajouter les événements de clic
+    document.querySelectorAll('.nutritionist-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = parseInt(card.dataset.id);
+        const nut = nutritionists.find(n => n.id === id);
+        if (nut) {
+          selectNutritionist(nut);
+        }
+      });
+    });
+  }
+  
+  function selectNutritionist(nutritionist) {
+    // Supprimer la classe selected de tous les cards
+    document.querySelectorAll('.nutritionist-card').forEach(card => {
+      card.classList.remove('selected');
+    });
+    
+    // Ajouter la classe selected à la card correspondante
+    const selectedCard = document.querySelector(`.nutritionist-card[data-id="${nutritionist.id}"]`);
+    if (selectedCard) {
+      selectedCard.classList.add('selected');
+    }
+    
+    selectedNutritionist = nutritionist;
+    
+    // Mettre à jour le résumé
+    const fullName = nutritionist.full_name || 'Nutritionist';
+    const specialization = nutritionist.specialization || 'Nutrition Specialist';
+    const experience = nutritionist.experience_years || '5';
+    const rating = nutritionist.rating || '4.8';
+    
+    document.getElementById('selectedNutritionistName').innerHTML = `${escapeHtml(fullName)} ✨`;
+    document.getElementById('selectedNutritionistInfo').innerHTML = `${escapeHtml(specialization)} • ${experience}+ years • ⭐ ${rating}`;
+    
+    // Activer le bouton de confirmation
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.disabled = false;
+  }
+  
+  async function confirmSelection() {
+    if (!selectedNutritionist) {
+      showToast("Please select a nutritionist first", true);
+      return;
+    }
+    
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = "⏳ Sending request...";
+    
+    try {
+      const response = await fetch('/api/users/assign-nutritionist/', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+          nutritionist_id: selectedNutritionist.id
+        }),
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok || data.success) {
+        showToast("✅ Request sent! Admin will confirm soon.");
+        setTimeout(() => {
+          window.location.href = '/user-profile/';
+        }, 2000);
+      } else if (data.already_pending) {
+        showToast("⏳ Your request is already pending. Please wait for admin approval.", false);
+        setTimeout(() => {
+          window.location.href = '/user-profile/';
+        }, 2000);
+      } else if (data.already_assigned) {
+        showToast(`✅ ${data.message}`, false);
+        setTimeout(() => {
+          window.location.href = '/user-profile/';
+        }, 2000);
+      } else {
+        showToast(data.error || "Failed to send request", true);
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = "✅ Confirm & Continue →";
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast("Network error. Please try again.", true);
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = "✅ Confirm & Continue →";
+    }
+  }
+  
+  // Initialisation
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchAvailableNutritionists();
+    
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.addEventListener('click', confirmSelection);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réservation Consultation - NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #27AE60, #FF7A00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .header p {
+    color: #64748b;
+    margin-top: 8px;
+  }
+  .package-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #27AE60, #2ecc71);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .card {
+    background: white;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+  }
+  .card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nutritionist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .nutritionist-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nutritionist-item:hover {
+    border-color: #27AE60;
+    background: #f0fdf4;
+    transform: translateX(4px);
+  }
+  .nutritionist-item.selected {
+    border-color: #27AE60;
+    background: linear-gradient(135deg, rgba(39,174,96,0.08), rgba(255,122,0,0.04));
+  }
+  .nutritionist-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #27AE60, #2ecc71);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+  }
+  .nutritionist-info {
+    flex: 1;
+  }
+  .nutritionist-name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #1e293b;
+  }
+  .nutritionist-specialty {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 4px;
+  }
+  .date-slots {
+    margin-top: 20px;
+  }
+  .date-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .date-btn {
+    padding: 10px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .date-btn.selected {
+    background: #27AE60;
+    color: white;
+    border-color: #27AE60;
+  }
+  .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .time-btn {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 40px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .time-btn.selected {
+    background: #27AE60;
+    color: white;
+    border-color: #27AE60;
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #FF7A00, #27AE60);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 24px;
+    font-size: 1rem;
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    color: #64748b;
+    text-decoration: none;
+  }
+  @media (max-width: 768px) {
+    .two-columns { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.8rem; }
+  }
+  .toast-msg {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #27AE60;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 40px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .toast-msg.show { opacity: 0.9; }
+  .toast-msg.error { background: #dc2626; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="package-badge" id="packageBadge">Chargement...</div>
+    <h1>Choisissez votre nutritionniste</h1>
+    <p>Sélectionnez un professionnel et un créneau pour votre consultation</p>
+  </div>
+
+  <div class="two-columns">
+    <div class="card">
+      <h2><i class="fas fa-user-md"></i> Nutritionnistes disponibles</h2>
+      <div class="nutritionist-list" id="nutritionistList">
+        <div style="text-align: center; padding: 40px;">Chargement des nutritionnistes...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-calendar-alt"></i> Choisissez un créneau</h2>
+      <div id="slotSelector">
+        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+          <i class="fas fa-hand-pointer"></i> Sélectionnez d'abord un nutritionniste
+        </div>
+      </div>
+      <button class="btn-primary" id="confirmBtn" disabled>✅ Confirmer et continuer</button>
+    </div>
+  </div>
+  <a href="/payment/" class="back-link">← Retour au paiement</a>
+</div>
+<div class="toast-msg" id="toastMsg"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script>
+let selectedNutritionistId = null;
+let selectedDate = null;
+let selectedTime = null;
+let packageInfo = null;
+
+function showToast(msg, isError = false) {
+  const toast = document.getElementById('toastMsg');
+  toast.textContent = msg;
+  toast.className = `toast-msg ${isError ? 'error' : ''}`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function getCSRFToken() {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, 10) === 'csrftoken=') {
+        cookieValue = decodeURIComponent(cookie.substring(10));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function loadPackageInfo() {
+  const stored = sessionStorage.getItem('pending_package');
+  if (stored) {
+    packageInfo = JSON.parse(stored);
+    const badge = document.getElementById('packageBadge');
+    if (packageInfo.has_ai && packageInfo.has_consult) {
+      badge.innerHTML = '🎁 Pack Standard + AI + Consultation';
+    } else if (packageInfo.has_ai) {
+      badge.innerHTML = '🤖 Pack Standard + AI Calorie Tracking';
+    } else if (packageInfo.has_consult) {
+      badge.innerHTML = '👩‍⚕️ Pack Standard + Consultation';
+    } else {
+      badge.innerHTML = '📋 Plan Standard';
+    }
+  } else {
+    document.getElementById('packageBadge').innerHTML = '📋 Plan Standard + Consultation';
+  }
+}
+
+async function loadNutritionists() {
+  try {
+    const response = await fetch('/api/consultations/nutritionists/', {
+      credentials: 'include'
+    });
+    if (response.ok) {
+      const nutritionists = await response.json();
+      const container = document.getElementById('nutritionistList');
+      
+      if (nutritionists.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #94a3b8;">Aucun nutritionniste disponible pour le moment.</div>';
+        return;
+      }
+      
+      container.innerHTML = nutritionists.map(n => `
+        <div class="nutritionist-item" data-id="${n.id}">
+          <div class="nutritionist-avatar">${n.name.charAt(0).toUpperCase()}</div>
+          <div class="nutritionist-info">
+            <div class="nutritionist-name">${escapeHtml(n.name)}</div>
+            <div class="nutritionist-specialty">${escapeHtml(n.specialization || 'Nutritionniste')} • ${n.experience_years || 5}+ ans d'expérience</div>
+          </div>
+        </div>
+      `).join('');
+      
+      document.querySelectorAll('.nutritionist-item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.nutritionist-item').forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+          selectedNutritionistId = parseInt(item.dataset.id);
+          loadSlots(selectedNutritionistId);
+        });
+      });
+    } else {
+      showToast("Erreur lors du chargement des nutritionnistes", true);
+    }
+  } catch (err) {
+    console.error(err);
+    showToast("Erreur réseau", true);
+  }
+}
+
+async function loadSlots(nutritionistId) {
+  const container = document.getElementById('slotSelector');
+  container.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-pulse"></i> Chargement des créneaux...</div>';
+  
+  try {
+    const dates = [];
+    for (let i = 1; i <= 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      dates.push(date);
+    }
+    
+    let html = `
+      <div class="date-slots">
+        <label style="font-weight: 600; margin-bottom: 10px; display: block;">📅 Choisissez une date</label>
+        <div class="date-selector" id="dateSelector">
+    `;
+    
+    dates.forEach(date => {
+      const dateStr = date.toISOString().split('T')[0];
+      const dayName = date.toLocaleDateString('fr', { weekday: 'short' });
+      const dayNum = date.getDate();
+      const month = date.toLocaleDateString('fr', { month: 'short' });
+      html += `<button class="date-btn" data-date="${dateStr}">${dayName} ${dayNum} ${month}</button>`;
+    });
+    
+    html += `</div><div class="time-slots" id="timeSelector"></div></div>`;
+    container.innerHTML = html;
+    
+    document.querySelectorAll('.date-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedDate = btn.dataset.date;
+        loadTimeSlots();
+      });
+    });
+    
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Erreur de chargement des créneaux</div>';
+  }
+}
+
+function loadTimeSlots() {
+  const timeContainer = document.getElementById('timeSelector');
+  const timeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+  
+  timeContainer.innerHTML = timeSlots.map(time => `
+    <button class="time-btn" data-time="${time}">${time}</button>
+  `).join('');
+  
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedTime = btn.dataset.time;
+      
+      const confirmBtn = document.getElementById('confirmBtn');
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '✅ Confirmer et accéder au dashboard';
+    });
+  });
+}
+
+async function confirmAndRedirect() {
+    if (!selectedNutritionistId || !selectedDate || !selectedTime) {
+      showToast("Veuillez sélectionner un nutritionniste, une date et une heure", true);
+      return;
+    }
+    
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Envoi en cours...';
+    
+    const dateTime = `${selectedDate}T${selectedTime}:00`;
+    
+    try {
+      // ✅ Utiliser book (pas book-trial) pour les consultations payantes
+      const response = await fetch('/api/consultations/book/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+          nutritionist_id: selectedNutritionistId,
+          date: dateTime,
+          notes: `Consultation liée au package: ${packageInfo?.type || 'standard'} - ${packageInfo?.has_consult ? 'Consultation incluse' : ''}`
+        }),
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        showToast("✅ Consultation réservée ! Le nutritionniste vous confirmera la date.");
+        sessionStorage.removeItem('pending_package');
+        setTimeout(() => {
+          window.location.href = '/user-profile/';
+        }, 1500);
+      } else {
+        console.error("Erreur API:", data);
+        showToast(data.error || "Erreur lors de la réservation", true);
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '✅ Confirmer et continuer';
+      }
+    } catch (err) {
+      console.error('Erreur réseau:', err);
+      showToast("Erreur réseau. Veuillez réessayer.", true);
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '✅ Confirmer et continuer';
+    }
+  }
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+}
+
+// Initialisation
+loadPackageInfo();
+loadNutritionists();
+
+document.getElementById('confirmBtn').addEventListener('click', confirmAndRedirect);
+</script>
+</body>
+</html>

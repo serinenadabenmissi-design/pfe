@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>NutriLife - Admin Dashboard | Platform Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F8F9FA; color: #2C3E50; overflow-x: hidden; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 280px;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(39,174,96,0.15);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        .sidebar-header { padding: 28px 24px; border-bottom: 1px solid rgba(39,174,96,0.15); margin-bottom: 24px; }
+        .logo { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #27AE60 0%, #27AE60 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .logo span { font-size: 1.7rem; }
+        .admin-badge { background: linear-gradient(135deg, #FF7A00, #27AE60); color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-top: 12px; }
+        .user-welcome { margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 48px; height: 48px; background: linear-gradient(135deg, #27AE60, #27AE60); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; }
+        .user-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; color: #2C3E50; }
+        .user-info p { font-size: 0.75rem; color: #5a6e7c; }
+        .nav-menu { padding: 0 16px 24px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 16px; margin-bottom: 6px; border-radius: 18px;
+            color: #5a6e7c; font-weight: 500; transition: all 0.3s ease; cursor: pointer;
+        }
+        .nav-item i { width: 24px; font-size: 1.2rem; color: #27AE60; }
+        .nav-item.active { background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(255,122,0,0.08)); color: #27AE60; font-weight: 600; }
+        .nav-item.active i { color: #FF7A00; }
+        .nav-item:hover:not(.active) { background: rgba(39,174,96,0.08); transform: translateX(4px); }
+        .main-content { flex: 1; margin-left: 280px; padding: 28px 36px; transition: all 0.3s; }
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+        }
+        .left-section { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .page-title h1 { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #FF7A00 0%, #27AE60 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .page-title p { color: #5a6e7c; font-size: 0.85rem; margin-top: 4px; }
+        .right-actions { display: flex; align-items: center; gap: 16px; position: relative; }
+        
+        .notification-bell {
+            position: relative;
+            background: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .notification-bell:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(39,174,96,0.2); }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc2626;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            text-align: center;
+        }
+        .notification-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: 380px;
+            max-height: 450px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            border: 1px solid rgba(39,174,96,0.1);
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+            animation: fadeInDown 0.2s ease;
+        }
+        .notification-dropdown.show { display: block; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .notification-header { padding: 16px 20px; border-bottom: 1px solid rgba(39,174,96,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h4 { font-size: 1rem; font-weight: 700; color: #1e293b; }
+        .mark-all-read { font-size: 0.7rem; color: #27AE60; cursor: pointer; font-weight: 600; }
+        .notifications-list { max-height: 350px; overflow-y: auto; }
+        .notification-item { padding: 14px 20px; border-bottom: 1px solid rgba(39,174,96,0.05); cursor: pointer; transition: background 0.2s; display: flex; gap: 12px; }
+        .notification-item:hover { background: #f8fafc; }
+        .notification-item.unread { background: linear-gradient(135deg, rgba(39,174,96,0.05), rgba(255,122,0,0.02)); }
+        .notification-icon { width: 40px; height: 40px; background: rgba(39,174,96,0.1); border-radius: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .notification-icon i { font-size: 1.2rem; color: #27AE60; }
+        .notification-content { flex: 1; }
+        .notification-title { font-weight: 600; font-size: 0.85rem; color: #1e293b; margin-bottom: 4px; }
+        .notification-message { font-size: 0.7rem; color: #64748b; margin-bottom: 4px; }
+        .notification-time { font-size: 0.6rem; color: #94a3b8; }
+        .empty-notifications { text-align: center; padding: 40px 20px; color: #94a3b8; }
+        
+        .btn-primary { background: linear-gradient(135deg, #27AE60 0%, #27AE60 100%); border: none; color: white; padding: 10px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39,174,96,0.4); }
+        .btn-outline { background: transparent; border: 1.5px solid #27AE60; color: #27AE60; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; }
+        .btn-outline:hover { background: #27AE60; color: white; }
+        .btn-danger { background: #dc2626; border: none; color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; cursor: pointer; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-sm { padding: 4px 10px; font-size: 0.7rem; margin: 0 2px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 32px; }
+        .stat-card { background: white; border-radius: 28px; padding: 1.5rem; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08); border: 1px solid rgba(39,174,96,0.1); transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .stat-header i { font-size: 2rem; color: #27AE60; }
+        .stat-value { font-size: 2.2rem; font-weight: 800; color: #2C3E50; }
+        .stat-label { color: #5a6e7c; font-size: 0.85rem; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            max-width: 500px;
+            width: 90%;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .plans-list-section { margin-top: 40px; }
+        .section-title { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            margin-bottom: 20px; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid rgba(39,174,96,0.3); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .badge-approved { background: rgba(39,174,96,0.15); color: #27AE60; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-rejected { background: rgba(220,38,38,0.15); color: #dc2626; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-standard { background: rgba(59,130,246,0.15); color: #3b82f6; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-premium { background: linear-gradient(135deg, #FF7A00, #27AE60); color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .filter-select { padding: 8px 16px; border-radius: 40px; border: 1px solid #e2e8f0; background: white; font-family: 'Inter', sans-serif; }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(39,174,96,0.1);
+        }
+                /* Delete button for premium plans */
+        .plan-card .delete-plan {
+            opacity: 0;
+            transition: opacity 0.2s;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #dc2626;
+            padding: 4px 8px;
+            border-radius: 50%;
+        }
+        .plan-card:hover .delete-plan {
+            opacity: 1;
+        }
+        .plan-card .delete-plan:hover {
+            background: #fee2e2;
+            transform: scale(1.1);
+        }
+        .admin-plan-badge {
+            background: linear-gradient(135deg, #FF7A00, #27AE60);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+            display: inline-block;
+        }
+                /* Premium Plan Modal Styles */
+        .premium-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .premium-modal.show {
+            display: flex;
+        }
+        .premium-modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 550px;
+            width: 90%;
+            padding: 32px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .premium-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(39,174,96,0.2);
+        }
+        .premium-modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF7A00, #27AE60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .premium-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+        .premium-modal-close:hover {
+            color: #dc2626;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+            font-size: 0.85rem;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #27AE60;
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.1);
+        }
+        .premium-features-list {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .premium-feature-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .premium-feature-item input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 40px;
+        }
+        .premium-feature-item button {
+            background: #fee2e2;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        .btn-add-feature {
+            background: rgba(39,174,96,0.1);
+            border: 1px dashed #27AE60;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: #27AE60;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .btn-add-feature:hover {
+            background: rgba(39,174,96,0.2);
+        }
+        .premium-modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn-create {
+            background: linear-gradient(135deg, #27AE60, #2ecc71);
+            flex: 1;
+        }
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            flex: 1;
+        }
+                /* WhatsApp Style Messages */
+        .messages-container {
+            display: flex;
+            height: calc(100vh - 200px);
+            min-height: 500px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+        }
+
+        /* Contacts Sidebar */
+        .messages-contacts {
+            width: 320px;
+            background: #f8fafc;
+            border-right: 1px solid rgba(39,174,96,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages-contacts-header {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid rgba(39,174,96,0.1);
+        }
+
+        .messages-contacts-header h3 {
+            margin: 0 0 16px 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contacts-search {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .contacts-search:focus {
+            outline: none;
+            border-color: #27AE60;
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .contact-item:hover {
+            background: rgba(39,174,96,0.08);
+        }
+
+        .contact-item.active {
+            background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(255,122,0,0.08));
+            border-left: 3px solid #27AE60;
+        }
+
+        .contact-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #27AE60, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .contact-avatar.admin-avatar {
+            background: linear-gradient(135deg, #FF7A00, #FF9A40);
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1e293b;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-last-message {
+            font-size: 0.75rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-time {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+
+        .unread-badge {
+            background: #27AE60;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 20px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Chat Area */
+        .messages-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            background: white;
+            border-bottom: 1px solid rgba(39,174,96,0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #27AE60, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .chat-header-role {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .messages-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fafbfc;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message-bubble-mine {
+            background: linear-gradient(135deg, #27AE60, #2ecc71);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble-theirs {
+            background: white;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid rgba(39,174,96,0.1);
+        }
+
+        .message-time {
+            font-size: 0.6rem;
+            margin-top: 4px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .message-bubble-mine .message-time {
+            justify-content: flex-end;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .message-bubble-theirs .message-time {
+            color: #94a3b8;
+        }
+
+        .message-sender-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #FF7A00;
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            background: white;
+            border-top: 1px solid rgba(39,174,96,0.1);
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: none;
+            max-height: 100px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #27AE60;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #27AE60, #2ecc71);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Style pour les contacts avec messages non lus */
+        .contact-item-unread {
+            background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(255,122,0,0.06));
+            border-left: 3px solid #FF7A00;
+            position: relative;
+        }
+        
+        .contact-item-unread .contact-name {
+            font-weight: 700;
+            color: #FF7A00;
+        }
+        
+        .contact-item-unread .contact-last-message {
+            font-weight: 500;
+            color: #1e293b;
+        }
+        
+        /* Animation pour les nouveaux messages */
+        @keyframes messagePulse {
+            0% { background-color: rgba(39,174,96,0.05); }
+            50% { background-color: rgba(39,174,96,0.2); }
+            100% { background-color: rgba(39,174,96,0.05); }
+        }
+        
+        .message-bubble-new {
+            animation: messagePulse 0.5s ease;
+        }
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(39,174,96,0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .empty-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .empty-chat i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            color: #cbd5e1;
+        }
+
+        .loading-messages {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .typing-indicator {
+            padding: 8px 16px;
+            font-size: 0.7rem;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .messages-contacts {
+                width: 100%;
+                max-height: 300px;
+            }
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+
+        /* Online status */
+        .contact-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #27AE60;
+            margin-left: 8px;
+        }
+
+        .contact-status.offline {
+            background: #cbd5e1;
+        }
+        .modal-header h3 { font-size: 1.4rem; font-weight: 700; }
+        .close-modal { background: none; border: none; font-size: 24px; cursor: pointer; }
+        .info-row { display: flex; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .info-label { width: 130px; font-weight: 600; color: #64748b; }
+        .info-value { flex: 1; color: #1e293b; }
+        
+        .admin-card { background: white; border-radius: 28px; padding: 1.6rem; margin-bottom: 30px; border: 1px solid rgba(39,174,96,0.1); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .card-header h3 { font-size: 1.3rem; font-weight: 700; color: #2C3E50; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 12px 8px; text-align: left; border-bottom: 1px solid rgba(39,174,96,0.1); }
+        .data-table th { font-weight: 600; color: #27AE60; }
+        .badge-active { background: rgba(39,174,96,0.15); color: #27AE60; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-pending { background: rgba(255,122,0,0.15); color: #FF7A00; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; }
+        .badge-assigned { background: #d1fae5; color: #059669; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-request { background: #fef3c7; color: #d97706; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .badge-bonus { background: #e0f2fe; color: #0284c7; padding: 3px 10px; border-radius: 30px; font-size: 0.65rem; font-weight: 500; display: inline-block; margin-right: 5px; margin-top: 2px; }
+        .plan-bonuses { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .tab-content { display: none; }
+        .active-tab { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .menu-toggle { background: none; border: none; font-size: 26px; color: #27AE60; display: none; cursor: pointer; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; display: none; }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); position: fixed; z-index: 200; transition: transform 0.3s; } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; padding: 20px; } .menu-toggle { display: block; } }
+        @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } }
+        .loading { text-align: center; padding: 40px; color: #5a6e7c; }
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px; }
+        @media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+        select, textarea { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">NutriLife <span>🍎</span></div>
+            <div class="admin-badge"><i class="fas fa-shield-alt"></i> Administrator</div>
+            <div class="user-welcome" id="adminUserInfo">
+                <div class="avatar" id="adminAvatar">AD</div>
+                <div class="user-info">
+                    <h4 id="adminName">Admin</h4>
+                    <p>Super Admin • Full Access</p>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" data-tab="dashboard-overview"><i class="fas fa-tachometer-alt"></i><span>Dashboard Overview</span></div>
+            <div class="nav-item" data-tab="manage-users"><i class="fas fa-users"></i><span>Manage Users</span></div>
+            <div class="nav-item" data-tab="manage-nutritionists"><i class="fas fa-user-md"></i><span>Manage Nutritionists</span></div>
+            <div class="nav-item" data-tab="manage-subscriptions"><i class="fas fa-calendar-check"></i><span>Manage Subscriptions</span></div>
+            <div class="nav-item" data-tab="assignment-requests"><i class="fas fa-handshake"></i><span>Assignment Requests</span></div>
+            <div class="nav-item" data-tab="trial-requests"><i class="fas fa-flask"></i><span>Trial Requests</span></div>
+            <div class="nav-item" data-tab="manage-plans"><i class="fas fa-apple-alt"></i><span>Manage Plans</span></div>
+            <div class="nav-item" data-tab="manage-blog"><i class="fas fa-blog"></i><span>Manage Blog</span></div>
+            <div class="nav-item" data-tab="message"><i class="fas fa-blog"></i><span>Message</span></div>
+
+        </div>
+        <div style="padding: 20px 24px; border-top: 1px solid rgba(39,174,96,0.1); margin-top: 20px;">
+            <div class="nav-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Log out</span></div>
+        </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+        <div class="top-bar">
+            <div class="left-section">
+                <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h1 id="dynamicTitle">Admin Dashboard</h1>
+                    <p id="dynamicSubtitle">Platform Management & Analytics</p>
+                </div>
+            </div>
+            <div class="right-actions">
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </div>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h4><i class="fas fa-bell"></i> Notifications</h4>
+                        <span class="mark-all-read" id="markAllReadBtn">Mark all as read</span>
+                    </div>
+                    <div class="notifications-list" id="notificationsList"><div class="empty-notifications">Loading...</div></div>
+                </div>
+                <button class="btn-primary" id="exportDataBtn"><i class="fas fa-download"></i> Export Report</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Overview Tab -->
+        <div id="dashboard-overview" class="tab-content active-tab">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">Total Patients</span><i class="fas fa-users"></i></div><div class="stat-value" id="totalPatients">--</div><div class="stat-label">Registered users</div></div>
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">Nutritionists</span><i class="fas fa-user-md"></i></div><div class="stat-value" id="totalNutritionists">--</div><div class="stat-label">Active professionals</div></div>
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">Active Subscriptions</span><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="activeSubscriptions">--</div><div class="stat-label">Premium plans</div></div>
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">Pending Assignments</span><i class="fas fa-clock"></i></div><div class="stat-value" id="pendingAssignments">--</div><div class="stat-label">Awaiting approval</div></div>
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">Quarter Consultations</span><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="quarterConsultations">--</div><div class="stat-label">Completed this quarter</div></div>
+                <div class="stat-card"><div class="stat-header"><span class="stat-label">AI Track Usage</span><i class="fas fa-robot"></i></div><div class="stat-value" id="aiTrackUsage">--</div><div class="stat-label">Meals analyzed</div></div>
+            </div>
+            <div class="chart-row">
+                <div class="admin-card"><div class="card-header"><h3><i class="fas fa-chart-line"></i> Monthly Revenue Trend</h3></div><canvas id="revenueChart" style="max-height: 280px; width:100%"></canvas></div>
+                <div class="admin-card"><div class="card-header"><h3><i class="fas fa-chart-pie"></i> User Distribution</h3></div><canvas id="usersPieChart" style="max-height: 280px; width:100%"></canvas></div>
+            </div>
+            <div class="admin-card"><div class="card-header"><h3><i class="fas fa-chart-simple"></i> Active Subscription Plans</h3><button class="btn-outline" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button></div><canvas id="plansChart" style="max-height: 250px; width:100%"></canvas></div>
+        </div>
+
+        <!-- Manage Users Tab -->
+        <div id="manage-users" class="tab-content">
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> All Registered Users</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>Name</th><th>Email</th><th>Weight</th><th>Goal</th><th>Status</th><th>Assigned Nutritionist</th><th>Actions</th></tr></thead>
+                        <tbody id="usersTableBody"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Modal -->
+        <div id="detailsModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-circle"></i> User Details</h3><button class="close-modal" onclick="closeDetailsModal()">&times;</button></div><div id="userDetailsContent"></div><div style="margin-top:20px;"><button class="btn-danger" id="blockFromModalBtn" onclick="blockUserFromModal()">Block User</button></div></div></div>
+
+        <!-- Assignment Request Modals -->
+        <div id="requestModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-handshake"></i> Assignment Request</h3><button class="close-modal" onclick="closeRequestModal()">&times;</button></div><div id="requestModalContent"></div><div style="display: flex; gap: 12px; margin-top: 20px;"><button class="btn-primary" id="approveFromModalBtn" style="flex:1;">✓ Approve</button><button class="btn-danger" id="rejectFromModalBtn" style="flex:1;">✗ Reject & Assign</button></div></div></div>
+
+        <div id="rejectModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 style="color:#dc2626;"><i class="fas fa-exclamation-triangle"></i> Reject & Assign</h3><button class="close-modal" onclick="closeRejectModal()">&times;</button></div><p style="margin-bottom:20px;">The patient requested a nutritionist. You can reject and assign an alternative.</p>
+            <div class="form-group" style="margin-bottom:20px;"><label style="font-weight:600; display:block; margin-bottom:8px;">📋 Select Alternative Nutritionist</label><select id="alternativeNutritionistSelect" style="width:100%; padding:12px; border-radius:16px; border:1px solid #e2e8f0;"><option value="">-- Keep requested nutritionist --</option></select></div>
+            <div class="form-group" style="margin-bottom:20px;"><label style="font-weight:600; display:block; margin-bottom:8px;">💬 Reason</label><textarea id="rejectionReason" rows="3" style="width:100%; padding:12px; border-radius:16px; border:1px solid #e2e8f0;" placeholder="Explain why..."></textarea></div>
+            <div style="display:flex; gap:12px;"><button onclick="confirmRejectWithAlternative()" class="btn-primary" style="flex:1; background:#dc2626;"><i class="fas fa-check"></i> Confirm & Assign</button><button onclick="closeRejectModal()" class="btn-outline" style="flex:1;">Cancel</button></div>
+        </div></div>
+
+        <div id="nutritionistDetailsModal" class="modal"><div class="modal-content" style="max-width: 700px;"><div class="modal-header"><h3><i class="fas fa-user-md"></i> Nutritionist Details</h3><button class="close-modal" onclick="closeNutritionistDetailsModal()">&times;</button></div><div id="nutritionistDetailsContent"></div></div></div>
+
+        <div id="addNutritionistModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add New Nutritionist</h3><button class="close-modal" onclick="closeAddNutritionistModal()">&times;</button></div>
+            <form id="addNutritionistForm">
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">First Name *</label><input type="text" id="nutFirstName" required style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Last Name *</label><input type="text" id="nutLastName" required style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Email *</label><input type="email" id="nutEmail" required style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Password *</label><input type="password" id="nutPassword" required style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Specialization</label><select id="nutSpecialization" style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"><option value="">Select specialization</option><option value="Clinical Nutrition">Clinical Nutrition</option><option value="Sports Nutrition">Sports Nutrition</option><option value="Hormonal Health">Hormonal Health</option><option value="Weight Management">Weight Management</option><option value="Pediatric Nutrition">Pediatric Nutrition</option></select></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Bio (optional)</label><textarea id="nutBio" rows="3" style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></textarea></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label style="font-weight: 600;">Experience (years)</label><input type="number" id="nutExperience" value="0" min="0" max="50" style="width:100%; padding:10px; border-radius:12px; border:1px solid #e2e8f0;"></div>
+                <div class="form-group" style="margin-bottom: 15px;"><label><input type="checkbox" id="nutIsAvailable" checked> Available for consultations</label></div>
+                <div style="display: flex; gap: 12px; margin-top: 20px;"><button type="submit" class="btn-primary" style="flex:1;">✅ Create Nutritionist</button><button type="button" onclick="closeAddNutritionistModal()" class="btn-outline" style="flex:1;">Cancel</button></div>
+            </form>
+        </div></div>
+
+        <!-- Manage Nutritionists Tab -->
+        <div id="manage-nutritionists" class="tab-content">
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-md"></i> Nutritionists</h3>
+                    <button class="btn-primary" id="addNutritionistBtn"><i class="fas fa-plus"></i> Add Nutritionist</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>Name</th><th>Email</th><th>Specialization</th><th>Patients</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="nutritionistsTableBody"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MANAGE SUBSCRIPTIONS TAB -->
+        <div id="manage-subscriptions" class="tab-content">
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-calendar-check"></i> Active Subscriptions</h3>
+                    <button class="btn-outline" id="refreshSubscriptionsBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Duration</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptionsTableBody">
+                            <tr><td colspan="6" class="loading">Loading subscriptions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+                      <!-- Manage Plans Tab -->
+        <div id="manage-plans" class="tab-content">
+            <!-- SECTION 1: PENDING APPROVAL (inchangée) -->
+            <div class="admin-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list-ul"></i> All Diet Plans History</h3>
+                    <div>
+                        <button class="btn-primary" id="createPremiumPlanBtn" style="margin-right: 10px; background: linear-gradient(135deg, #FF7A00, #27AE60);">
+                            <i class="fas fa-crown"></i> Create Premium Plan
+                        </button>
+                        <button class="btn-outline" id="refreshAllPlansListBtn"><i class="fas fa-sync-alt"></i> Refresh List</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Submitted By</th>
+                                <th>Duration</th>
+                                <th>Submitted Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingPlansTableBody">
+                            <tr><td colspan="5" class="loading">Loading......</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 2: ALL PLANS LIST (APPROVED & REJECTED) -->
+            <div class="admin-card plans-list-section">
+                <div class="card-header">
+                    <h3><i class="fas fa-list-ul"></i> All Diet Plans History</h3>
+                    <button class="btn-outline" id="refreshAllPlansListBtn"><i class="fas fa-sync-alt"></i> Refresh List</button>
+                    <button class="btn-outline btn-sm" id="filterSeasonalBtn" style="margin-left: 10px;">
+                        <i class="fas fa-calendar-alt"></i> Seasonal Offers
+                    </button>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <select id="filterPlanStatus" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <select id="filterPlanType" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                    <input type="text" id="searchPlanName" class="filter-select" placeholder="🔍 Search plan name..." style="width: 250px;">
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Type</th>
+                                <th>Submitted By</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Reason</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allPlansTableBody">
+                            <tr><td colspan="8" class="loading">Loading plans...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+                <!-- Premium Plan Creation Modal -->
+                <div id="premiumPlanModal" class="premium-modal">
+                    <div class="premium-modal-content">
+                        <div class="premium-modal-header">
+                            <h3><i class="fas fa-crown"></i> Create Premium Plan</h3>
+                            <button class="premium-modal-close" onclick="closePremiumModal()">&times;</button>
+                        </div>
+                        <form id="premiumPlanForm">
+                            <div class="form-group">
+                                <label><i class="fas fa-tag"></i> Plan Name *</label>
+                                <input type="text" id="premiumPlanName" placeholder="e.g., Ultimate Wellness Premium" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-file-alt"></i> Description</label>
+                                <textarea id="premiumPlanDesc" rows="2" placeholder="Describe the benefits of this premium plan..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-dollar-sign"></i> Price (per month) *</label>
+                                <input type="number" id="premiumPlanPrice" step="0.01" placeholder="79.99" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-clock"></i> Duration (months)</label>
+                                <select id="premiumPlanDuration">
+                                    <option value="1">1 month</option>
+                                    <option value="3">3 months (save 10%)</option>
+                                    <option value="6">6 months (save 20%)</option>
+                                    <option value="12">12 months (save 30%)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-list-check"></i> Features</label>
+                                <div id="premiumFeaturesList" class="premium-features-list">
+                                    <div class="premium-feature-item">
+                                        <input type="text" placeholder="e.g., Unlimited consultations" value="Unlimited consultations">
+                                        <button type="button" onclick="removeFeature(this)">✗</button>
+                                    </div>
+                                    <div class="premium-feature-item">
+                                        <input type="text" placeholder="e.g., AI-powered tracking" value="AI-powered tracking">
+                                        <button type="button" onclick="removeFeature(this)">✗</button>
+                                    </div>
+                                    <div class="premium-feature-item">
+                                        <input type="text" placeholder="e.g., Personalized meal plans" value="Personalized meal plans">
+                                        <button type="button" onclick="removeFeature(this)">✗</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-add-feature" onclick="addFeature()">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </button>
+                            </div>
+                            <div class="premium-modal-actions">
+                                <button type="submit" class="btn-primary btn-create">
+                                    <i class="fas fa-crown"></i> Create Premium Plan
+                                </button>
+                                <button type="button" class="btn-outline btn-cancel" onclick="closePremiumModal()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        <!-- ASSIGNMENT REQUESTS TAB -->
+        <div id="assignment-requests" class="tab-content"><div class="admin-card"><div class="card-header"><h3><i class="fas fa-handshake"></i> Nutritionist Assignment Requests</h3><p style="font-size:0.8rem; color:#5a6e7c;">Approve or reject patient requests for nutritionists</p></div><table class="data-table"><thead><tr><th>Patient</th><th>Requested Nutritionist</th><th>Date</th><th>Actions</th></tr></thead><tbody id="assignmentRequestsTableBody"><tr><td colspan="4" class="loading">Loading...</td></tr></tbody></table></div></div>
+        
+        <div id="trial-requests" class="tab-content"><div class="admin-card"><div class="card-header"><h3><i class="fas fa-flask"></i> Free Trial Consultation Requests</h3></div><table class="data-table"><thead><tr><th>Patient</th><th>Nutritionist</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="trialRequestsTableBody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody></table></div></div>
+       <!-- Manage Blog Tab -->
+<div id="manage-blog" class="tab-content">
+    <div class="admin-card">
+        <div class="card-header">
+            <h3><i class="fas fa-blog"></i> Blog Posts Pending Review</h3>
+            <button class="btn-outline" id="refreshBlogPostsBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Submitted Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingBlogPostsTableBody">
+                    <tr><td colspan="5" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="admin-card">
+        <div class="card-header">
+            <h3><i class="fas fa-history"></i> All Blog Posts History</h3>
+        </div>
+        <div class="filter-bar" style="margin-bottom: 20px;">
+            <select id="filterBlogStatus" class="filter-select">
+                <option value="all">All Status</option>
+                <option value="published">Published</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            <input type="text" id="searchBlogPost" class="filter-select" placeholder="🔍 Search posts..." style="width: 250px;">
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="allBlogPostsTableBody">
+                    <tr><td colspan="6" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Blog Post Details Modal -->
+<div id="blogPostModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-alt"></i> Blog Post Details</h3>
+            <button class="close-modal" onclick="closeBlogModal()">&times;</button>
+        </div>
+        <div id="blogPostContent"></div>
+        <div style="display: flex; gap: 12px; margin-top: 20px;" id="blogPostActions"></div>
+    </div>
+</div>
+
+<div id="message" class="tab-content">
+    <div class="messages-container">
+        <!-- Contacts Sidebar -->
+        <div class="messages-contacts">
+            <div class="messages-contacts-header">
+                <h3><i class="fas fa-comments"></i> Conversations</h3>
+                <input type="text" class="contacts-search" id="contactsSearch" placeholder="🔍 Search contacts...">
+            </div>
+            <div class="contacts-list" id="contactsList">
+                <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="fas fa-spinner fa-pulse"></i> Loading contacts...
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="messages-chat">
+            <div id="chatContent">
+                <div class="empty-chat">
+                    <i class="fas fa-comment-dots"></i>
+                    <p>Select a conversation to start messaging</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+</div>
+<!-- Toast message container -->
+<div id="toastMsg" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: none;"></div>
+<script>
+    // ============ SESSION MANAGEMENT & UTILS ============
+    function showToast(msg, isError) { 
+        let toast = document.getElementById('toastMsg');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toastMsg';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.backgroundColor = '#27AE60';
+            toast.style.color = 'white';
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '40px';
+            toast.style.zIndex = '9999';
+            toast.style.fontSize = '0.85rem';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.backgroundColor = isError ? '#dc2626' : '#27AE60';
+        toast.style.opacity = '1';
+        setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+    }
+    
+    function getCSRFToken() { 
+        let cv = null; 
+        if (document.cookie) { 
+            document.cookie.split(';').forEach(c => { 
+                let cookie = c.trim(); 
+                if (cookie.startsWith('csrftoken=')) cv = decodeURIComponent(cookie.substring(10)); 
+            }); 
+        } 
+        return cv; 
+    }
+    
+    function escapeHtml(t) { 
+        if (!t) return ''; 
+        return String(t).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); 
+    }
+    
+    function showSessionExpiredModal() {
+        const existingModal = document.getElementById('sessionExpiredModal');
+        if (existingModal) existingModal.remove();
+        
+        const modalHtml = `
+            <div id="sessionExpiredModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 20000; display: flex; align-items: center; justify-content: center;">
+                <div style="background: white; border-radius: 28px; max-width: 400px; width: 90%; padding: 32px; text-align: center;">
+                    <i class="fas fa-clock" style="font-size: 4rem; color: #dc2626; margin-bottom: 16px;"></i>
+                    <h2 style="color: #dc2626; margin-bottom: 12px;">Session Expired</h2>
+                    <p style="color: #64748b; margin-bottom: 24px;">Your session has expired. Please log in again to continue.</p>
+                    <button id="sessionLoginBtn" style="background: linear-gradient(135deg, #27AE60, #2ecc71); border: none; color: white; padding: 12px 32px; border-radius: 40px; font-weight: 600; cursor: pointer; width: 100%; font-size: 1rem;">
+                        <i class="fas fa-sign-in-alt"></i> Log In Again
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('sessionLoginBtn')?.addEventListener('click', () => { window.location.href = '/login/'; });
+    }
+    
+    function isSessionError(error) {
+        if (typeof error === 'object' && error !== null) {
+            if (error.status === 401 || error.status === 403) return true;
+            if (error.message && (error.message.includes('401') || error.message.includes('403'))) return true;
+        }
+        if (typeof error === 'string' && (error.includes('401') || error.includes('403'))) return true;
+        return false;
+    }
+    
+    async function apiGet(url) { 
+        try {
+            const res = await fetch(url, { credentials: 'include', headers: { 'X-CSRFToken': getCSRFToken() } }); 
+            if (res.status === 401 || res.status === 403) {
+                showSessionExpiredModal();
+                throw new Error('Session expired');
+            }
+            if (!res.ok) throw new Error(await res.text()); 
+            return res.json(); 
+        } catch(e) {
+            if (isSessionError(e)) showSessionExpiredModal();
+            throw e;
+        }
+    }
+    
+    async function apiPost(url, data) { 
+        try {
+            const res = await fetch(url, { 
+                method: 'POST', 
+                credentials: 'include', 
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() }, 
+                body: JSON.stringify(data) 
+            }); 
+            if (res.status === 401 || res.status === 403) {
+                showSessionExpiredModal();
+                throw new Error('Session expired');
+            }
+            if (!res.ok) throw new Error(await res.text()); 
+            return res.json(); 
+        } catch(e) {
+            if (isSessionError(e)) showSessionExpiredModal();
+            throw e;
+        }
+    }
+    
+    let allUsers = [];
+    let currentUserDetails = null;
+    let currentRequest = null;
+    let currentRejectRequestId = null;
+    let allPlansData = [];
+    let allBlogPosts = [];
+    let currentBlogPost = null;
+    
+    // ============ MANAGE USERS ============
+    async function loadUsers() {
+        try {
+            const users = await apiGet('/api/admin/users/');
+            allUsers = users;
+            const tbody = document.getElementById('usersTableBody');
+            if (!users.length) { tbody.innerHTML = '<tr><td colspan="7">No users found</td></tr>'; return; }
+            tbody.innerHTML = users.map(u => {
+                let statusBadge = '', assignedNut = u.assigned_nutritionist || '-';
+                if (u.assignment_status === 'pending') statusBadge = '<span class="badge-request">📋 Request Pending</span>';
+                else if (u.assignment_status === 'assigned') statusBadge = `<span class="badge-assigned">✓ Assigned to ${escapeHtml(assignedNut)}</span>`;
+                else statusBadge = '<span class="badge-pending">📋 No request</span>';
+                return `<tr>
+                    <td>${escapeHtml(u.name)}</td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td>${u.weight || '-'} kg</td>
+                    <td>${u.goal_weight || '-'} kg</td>
+                    <td>${statusBadge}</td>
+                    <td>${escapeHtml(assignedNut)}</td>
+                    <td><button class="btn-outline btn-sm" onclick="viewUserDetails(${u.id})">📄 Details</button> <button class="btn-danger btn-sm" onclick="toggleUserStatus(${u.id})">${u.status === 'Active' ? ' Block' : ' Unblock'}</button></td>
+                </tr>`;
+            }).join('');
+        } catch(e) { console.error(e); document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="7">Error loading users</td></tr>'; }
+    }
+    
+    async function viewUserDetails(userId) {
+        try {
+            const users = await apiGet('/api/admin/users/');
+            const user = users.find(u => u.id === userId);
+            if (!user) { showToast("User not found", true); return; }
+            currentUserDetails = user;
+            
+            document.getElementById('userDetailsContent').innerHTML = `
+                <div class="info-row"><div class="info-label">Full Name:</div><div class="info-value">${escapeHtml(user.name)}</div></div>
+                <div class="info-row"><div class="info-label">Email:</div><div class="info-value">${escapeHtml(user.email)}</div></div>
+                <div class="info-row"><div class="info-label">Weight:</div><div class="info-value">${user.weight || '-'} kg</div></div>
+                <div class="info-row"><div class="info-label">Goal Weight:</div><div class="info-value">${user.goal_weight || '-'} kg</div></div>
+                <div class="info-row"><div class="info-label">Height:</div><div class="info-value">${user.height || '-'} cm</div></div>
+                <div class="info-row"><div class="info-label">Health Conditions:</div><div class="info-value">${user.health_conditions?.length ? user.health_conditions.join(', ') : 'None'}</div></div>
+                <div class="info-row"><div class="info-label">Status:</div><div class="info-value"><span class="${user.status === 'Active' ? 'badge-active' : 'badge-pending'}">${user.status}</span></div></div>
+                <div class="info-row"><div class="info-label">Subscription Plan:</div><div class="info-value"><strong>${escapeHtml(user.subscription_plan || 'Standard')}</strong></div></div>
+                <div class="info-row"><div class="info-label">Assigned Nutritionist:</div><div class="info-value">${user.assigned_nutritionist || 'Not assigned'}</div></div>
+                <div class="info-row"><div class="info-label">Assignment Status:</div><div class="info-value">${user.assignment_status === 'pending' ? '⏳ Pending approval' : (user.assignment_status === 'assigned' ? '✓ Assigned' : '📋 No request')}</div></div>
+                <div class="info-row"><div class="info-label">Payment Completed:</div><div class="info-value">${user.payment_completed ? '✅ Yes' : '❌ No'}</div></div>
+                <div class="info-row"><div class="info-label">Registered:</div><div class="info-value">${user.created_at ? new Date(user.created_at).toLocaleDateString() : '-'}</div></div>
+                ${user.requested_nutritionist ? `<div class="info-row"><div class="info-label">Requested Nutritionist:</div><div class="info-value">${escapeHtml(user.requested_nutritionist)}</div></div>` : ''}
+            `;
+            document.getElementById('detailsModal').style.display = 'flex';
+        } catch(e) { console.error(e); showToast("Error loading user details", true); }
+    }
+    
+    function closeDetailsModal() { document.getElementById('detailsModal').style.display = 'none'; currentUserDetails = null; }
+    function blockUserFromModal() { if (currentUserDetails) { toggleUserStatus(currentUserDetails.id); closeDetailsModal(); } }
+    async function toggleUserStatus(userId) { await apiPost(`/api/admin/users/${userId}/toggle/`, {}); loadUsers(); }
+    
+    // ============ ASSIGNMENT REQUESTS ============
+    async function loadAssignmentRequests() {
+        try {
+            const reqs = await apiGet('/api/admin/assignment-requests/');
+            const tbody = document.getElementById('assignmentRequestsTableBody');
+            if (!reqs.length) { tbody.innerHTML = '<tr><td colspan="4">No pending requests</td></tr>'; return; }
+            tbody.innerHTML = reqs.map(r => `<tr>
+                <td>${escapeHtml(r.patient_name)}</td>
+                <td>${escapeHtml(r.nutritionist_name)}</td>
+                <td>${r.created_at_display}</td>
+                <td><button class="btn-primary btn-sm" onclick="approveRequestById(${r.id})">✓ Approve</button> <button class="btn-danger btn-sm" onclick="showRejectModalForRequest(${r.id}, ${r.patient_id})">✗ Reject</button></td>
+            </tr>`).join('');
+        } catch(e) { console.error(e); }
+    }
+    
+    async function approveRequestById(requestId) {
+        await apiPost(`/api/admin/assignment-requests/${requestId}/handle/`, { action: 'approve', alternative_nutritionist_id: null });
+        showToast("✓ Request approved!", false);
+        loadAssignmentRequests(); loadUsers(); loadNotifications(); loadAdminStats();
+    }
+    
+    async function showRejectModalForRequest(requestId, patientId) {
+        currentRejectRequestId = requestId;
+        try {
+            const nutritionists = await apiGet('/api/admin/nutritionists/');
+            const select = document.getElementById('alternativeNutritionistSelect');
+            select.innerHTML = '<option value="">-- Keep requested nutritionist --</option>';
+            nutritionists.forEach(nut => { select.innerHTML += `<option value="${nut.id}">${escapeHtml(nut.name)} (${nut.specialization || 'Nutritionist'})</option>`; });
+        } catch(e) {}
+        document.getElementById('rejectionReason').value = '';
+        document.getElementById('rejectModal').style.display = 'flex';
+    }
+    
+    async function confirmRejectWithAlternative() {
+        if (!currentRejectRequestId) return;
+        const alternativeNutId = document.getElementById('alternativeNutritionistSelect').value;
+        const reason = document.getElementById('rejectionReason').value;
+        await apiPost(`/api/admin/assignment-requests/${currentRejectRequestId}/handle/`, { action: 'reject', alternative_nutritionist_id: alternativeNutId || null, reason: reason });
+        showToast("✓ Request processed.", false);
+        closeRejectModal();
+        loadAssignmentRequests(); loadUsers(); loadNotifications(); loadAdminStats();
+    }
+    
+    function closeRejectModal() { document.getElementById('rejectModal').style.display = 'none'; currentRejectRequestId = null; }
+    function closeRequestModal() { document.getElementById('requestModal').style.display = 'none'; }
+    
+    // ============ SUBSCRIPTIONS ============
+    async function loadSubscriptions() {
+        try {
+            const subs = await apiGet('/api/admin/subscriptions/');
+            const tbody = document.getElementById('subscriptionsTableBody');
+            if (!subs.length) { tbody.innerHTML = '<tr><td colspan="6">No active subscriptions</td></tr>'; return; }
+            
+            const uniqueByEmail = new Map();
+            for (const sub of subs) {
+                const email = sub.customer_email || sub.patient_email;
+                if (!uniqueByEmail.has(email)) uniqueByEmail.set(email, sub);
+            }
+            const uniqueSubs = Array.from(uniqueByEmail.values());
+            
+            tbody.innerHTML = uniqueSubs.map(s => {
+                let bonusesHtml = '';
+                const planName = (s.plan_name || s.plan || '').toLowerCase();
+                const isPremium = planName.includes('premium');
+                
+                if (isPremium) {
+                    bonusesHtml = '<div class="plan-bonuses"><span class="badge-bonus"><i class="fas fa-robot"></i> AI Tracker</span><span class="badge-bonus"><i class="fas fa-calendar-check"></i> Unlimited Consultations</span></div>';
+                } else {
+                    const hasAi = s.has_ai === true || s.include_ai === true;
+                    const hasConsult = s.has_consultations === true || s.include_consultations === true;
+                    let bonusList = [];
+                    if (hasAi) bonusList.push('<span class="badge-bonus"><i class="fas fa-robot"></i> Bonus AI Track</span>');
+                    if (hasConsult) bonusList.push('<span class="badge-bonus"><i class="fas fa-calendar-check"></i> Bonus Consultation</span>');
+                    bonusesHtml = bonusList.length ? `<div class="plan-bonuses">${bonusList.join('')}</div>` : '';
+                }
+                
+                let durationText = `${s.duration_months || s.duration || 1} month${(s.duration_months || s.duration || 1) > 1 ? 's' : ''}`;
+                const startDate = s.start_date ? new Date(s.start_date).toLocaleDateString() : '-';
+                const endDate = s.end_date ? new Date(s.end_date).toLocaleDateString() : '-';
+                
+                return `<tr>
+                    <td><strong>${escapeHtml(s.customer_name || s.patient_name)}</strong><br><small style="color:#666">${escapeHtml(s.customer_email || s.patient_email)}</small></td>
+                    <td><strong>${escapeHtml(s.plan_name || s.plan || 'Standard')}</strong>${bonusesHtml}</td>
+                    <td><strong>$${parseFloat(s.total_amount || s.price_paid || 0).toFixed(2)}</strong></td>
+                    <td>${durationText}</td>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                </tr>`;
+            }).join('');
+        } catch(e) { console.error(e); document.getElementById('subscriptionsTableBody').innerHTML = '<tr><td colspan="6">Error loading subscriptions</td></tr>'; }
+    }
+    
+    // ============ MANAGE NUTRITIONISTS ============
+    async function loadNutritionists() {
+        try {
+            const nuts = await apiGet('/api/admin/nutritionists/');
+            const tbody = document.getElementById('nutritionistsTableBody');
+            if (!nuts.length) { tbody.innerHTML = '<tr><td colspan="6">No nutritionists found</td></tr>'; return; }
+            tbody.innerHTML = nuts.map(n => `<tr>
+                <td>${escapeHtml(n.name)}</td>
+                <td>${escapeHtml(n.email)}</td>
+                <td>${n.specialization || '-'}</td>
+                <td>${n.patients_count || 0}</td>
+                <td><span class="badge-active">${n.status}</span></td>
+                <td><button class="btn-outline btn-sm" onclick="viewNutritionistDetails(${n.id})">📄 Details</button> <button class="btn-danger btn-sm" onclick="deleteNutritionist(${n.id})">🗑️ Delete</button></td>
+            </tr>`).join('');
+        } catch(e) { console.error(e); }
+    }
+    
+    async function viewNutritionistDetails(id) {
+        try {
+            const nutritionists = await apiGet('/api/admin/nutritionists/');
+            const nutritionist = nutritionists.find(n => n.id === id);
+            if (!nutritionist) { showToast("Nutritionist not found", true); return; }
+            
+            const users = await apiGet('/api/admin/users/');
+            const assignedPatients = users.filter(u => u.assigned_nutritionist === nutritionist.name);
+            
+            let patientsHtml = '';
+            if (assignedPatients.length > 0) {
+                patientsHtml = `<div style="margin-top:20px;"><h4><i class="fas fa-users"></i> Assigned Patients (${assignedPatients.length})</h4><div style="max-height:300px; overflow-y:auto;"><table style="width:100%; border-collapse:collapse;"><thead><tr style="border-bottom:1px solid #e2e8f0;"><th style="text-align:left; padding:8px;">Name</th><th style="text-align:left; padding:8px;">Email</th><th style="text-align:left; padding:8px;">Status</th></tr></thead><tbody>${assignedPatients.map(p => `<tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:8px;">${escapeHtml(p.name)}</td><td style="padding:8px;">${escapeHtml(p.email)}</td><td style="padding:8px;"><span class="badge-active">${p.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+            } else {
+                patientsHtml = '<p style="margin-top:15px;">No patients currently assigned.</p>';
+            }
+            
+            document.getElementById('nutritionistDetailsContent').innerHTML = `
+                <div class="info-row"><div class="info-label">Full Name:</div><div class="info-value">${escapeHtml(nutritionist.name)}</div></div>
+                <div class="info-row"><div class="info-label">Email:</div><div class="info-value">${escapeHtml(nutritionist.email)}</div></div>
+                <div class="info-row"><div class="info-label">Specialization:</div><div class="info-value">${nutritionist.specialization || 'General Nutrition'}</div></div>
+                <div class="info-row"><div class="info-label">Patients Count:</div><div class="info-value">${nutritionist.patients_count || 0}</div></div>
+                <div class="info-row"><div class="info-label">Status:</div><div class="info-value"><span class="${nutritionist.status === 'Active' ? 'badge-active' : 'badge-pending'}">${nutritionist.status}</span></div></div>
+                ${patientsHtml}
+                <div style="margin-top:20px; display:flex; gap:10px;">
+                    <button class="btn-danger btn-sm" onclick="deleteNutritionist(${nutritionist.id})">🗑️ Delete Nutritionist</button>
+                    <button class="btn-outline btn-sm" onclick="closeNutritionistDetailsModal()">Close</button>
+                </div>
+            `;
+            document.getElementById('nutritionistDetailsModal').style.display = 'flex';
+        } catch(e) { console.error(e); showToast("Error loading nutritionist details", true); }
+    }
+    
+    function closeNutritionistDetailsModal() { document.getElementById('nutritionistDetailsModal').style.display = 'none'; }
+    function openAddNutritionistModal() { document.getElementById('addNutritionistModal').style.display = 'flex'; }
+    function closeAddNutritionistModal() { document.getElementById('addNutritionistModal').style.display = 'none'; }
+    
+    document.getElementById('addNutritionistForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const firstName = document.getElementById('nutFirstName').value.trim();
+        const lastName = document.getElementById('nutLastName').value.trim();
+        const email = document.getElementById('nutEmail').value.trim();
+        const password = document.getElementById('nutPassword').value;
+        const specialization = document.getElementById('nutSpecialization').value;
+        const bio = document.getElementById('nutBio').value;
+        const experienceYears = parseInt(document.getElementById('nutExperience').value) || 0;
+        const isAvailable = document.getElementById('nutIsAvailable').checked;
+        
+        if (!firstName || !lastName || !email || !password) { showToast("Please fill all required fields", true); return; }
+        if (password.length < 6) { showToast("Password must be at least 6 characters", true); return; }
+        
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Creating...';
+        
+        try {
+            const response = await apiPost('/api/admin/create-nutritionist/', {
+                first_name: firstName, last_name: lastName, email: email, password: password,
+                specialization: specialization, bio: bio, experience_years: experienceYears, is_available: isAvailable
+            });
+            if (response.message) { showToast(response.message); closeAddNutritionistModal(); loadNutritionists(); loadAdminStats(); document.getElementById('addNutritionistForm').reset(); }
+            else { showToast(response.error || "Creation failed", true); }
+        } catch (error) { console.error(error); showToast("Error creating nutritionist", true); }
+        finally { submitBtn.disabled = false; submitBtn.innerHTML = originalText; }
+    });
+    
+    async function deleteNutritionist(id) { if(confirm('Delete this nutritionist?')) { await apiPost(`/api/admin/nutritionists/${id}/delete/`, {}); loadNutritionists(); loadAdminStats(); } }
+    
+    // ============ TRIAL REQUESTS ============
+    async function loadTrialRequests() { 
+        try { 
+            const trials = await apiGet('/api/admin/trial-requests/'); 
+            const tbody = document.getElementById('trialRequestsTableBody'); 
+            if (!trials.length) { tbody.innerHTML = '<tr><td colspan="5">No trial requests</td></tr>'; return; } 
+            tbody.innerHTML = trials.map(t => `<tr>
+                <td>${escapeHtml(t.patient_name)}</td>
+                <td>${escapeHtml(t.nutritionist_name || 'N/A')}</td>
+                <td>${t.date_display}</td>
+                <td><span class="${t.status === 'pending' ? 'badge-pending' : 'badge-active'}">${t.status}</span></td>
+                <td>${t.status === 'pending' ? `<button class="btn-primary btn-sm" onclick="approveTrial(${t.id})">Approve</button> <button class="btn-danger btn-sm" onclick="rejectTrial(${t.id})">Reject</button>` : '-'}</td>
+            </tr>`).join(''); 
+        } catch(e) { console.error(e); } 
+    }
+    
+    async function approveTrial(id) { await apiPost(`/api/admin/trial-requests/${id}/handle/`, { action: 'approve' }); loadTrialRequests(); }
+    async function rejectTrial(id) { const reason = prompt('Reason:'); await apiPost(`/api/admin/trial-requests/${id}/handle/`, { action: 'reject', reason }); loadTrialRequests(); }
+    
+    // ============ MANAGE STANDARD PLANS ============
+    async function loadPendingPlans() {
+        try {
+            const response = await fetch('/api/admin/pending-standard-plans/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            
+            if (response.status === 401 || response.status === 403) {
+                showSessionExpiredModal();
+                return;
+            }
+            
+            if (response.ok) {
+                let plans = await response.json();
+                
+                const processedPlanIds = new Set();
+                allPlansData.forEach(plan => {
+                    if (plan.status === 'approved' || plan.status === 'rejected') {
+                        processedPlanIds.add(plan.id);
+                    }
+                });
+                
+                plans = plans.filter(plan => !processedPlanIds.has(plan.id));
+                
+                const tbody = document.getElementById('pendingPlansTableBody');
+                
+                if (!plans.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">No pending standard plans</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = plans.map(plan => `
+                    <tr data-plan-id="${plan.id}">
+                        <td><strong>${escapeHtml(plan.plan_name)}</strong></td>
+                        <td>${escapeHtml(plan.submitted_by_name || plan.submitted_by)}</td>
+                        <td>${plan.duration_weeks} weeks</td>
+                        <td>${plan.submitted_at_display}</td>
+                        <td>
+                            <button class="btn-primary btn-sm" onclick="viewPlanDetails(${plan.id})">👁️ View</button>
+                            <button class="btn-success btn-sm" onclick="approvePlan(${plan.id})">✅ Approve</button>
+                            <button class="btn-danger btn-sm" onclick="rejectPlan(${plan.id})">❌ Reject</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } catch(e) {
+            console.error(e);
+            document.getElementById('pendingPlansTableBody').innerHTML = '<tr><td colspan="5">Error loading plans</td></tr>';
+        }
+    }
+    
+    async function viewPlanDetails(planId) {
+        try {
+            const response = await fetch(`/api/admin/pending-standard-plans/`, { credentials: 'include' });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            const plans = await response.json();
+            const plan = plans.find(p => p.id === planId);
+            if (!plan) return;
+            
+            let mealsHtml = '';
+            if (plan.weekly_program) {
+                for (const [day, meals] of Object.entries(plan.weekly_program)) {
+                    mealsHtml += `<div style="margin-bottom:16px;"><strong>${day}</strong><br>`;
+                    if (meals.breakfast?.length) mealsHtml += `🍳 Breakfast: ${meals.breakfast.map(m => m.food).join(', ')}<br>`;
+                    if (meals.lunch?.length) mealsHtml += `🥗 Lunch: ${meals.lunch.map(m => m.food).join(', ')}<br>`;
+                    if (meals.snack?.length) mealsHtml += `🍎 Snack: ${meals.snack.map(m => m.food).join(', ')}<br>`;
+                    if (meals.dinner?.length) mealsHtml += `🌙 Dinner: ${meals.dinner.map(m => m.food).join(', ')}<br>`;
+                    mealsHtml += `</div>`;
+                }
+            }
+            
+            const modalHtml = `
+                <div style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:10000; display:flex; align-items:center; justify-content:center; overflow:auto;" onclick="this.remove()">
+                    <div style="background:white; max-width:700px; width:90%; max-height:90%; overflow:auto; border-radius:32px; padding:28px;" onclick="event.stopPropagation()">
+                        <h2 style="color:#27AE60;">📋 ${escapeHtml(plan.plan_name)}</h2>
+                        <p><strong>Submitted by:</strong> ${escapeHtml(plan.submitted_by_name || plan.submitted_by)}</p>
+                        <p><strong>Duration:</strong> ${plan.duration_weeks} weeks</p>
+                        <hr style="margin:16px 0;">
+                        <p><strong>Description:</strong> ${escapeHtml(plan.description || 'No description')}</p>
+                        <h3>🥗 Weekly Meal Program</h3>
+                        ${mealsHtml || '<p>No meals defined</p>'}
+                        ${plan.sport_advice ? `<hr><p><strong>🏋️ Sport Advice:</strong> ${escapeHtml(plan.sport_advice)}</p>` : ''}
+                        <div style="display:flex; gap:12px; margin-top:20px;">
+                            <button class="btn-success" onclick="approvePlan(${plan.id}); this.closest('div').parentElement.remove();" style="flex:1;">✅ Approve</button>
+                            <button class="btn-danger" onclick="rejectPlan(${plan.id}); this.closest('div').parentElement.remove();" style="flex:1;">❌ Reject</button>
+                            <button class="btn-outline" onclick="this.closest('div').parentElement.remove();" style="flex:1;">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        } catch(e) { console.error(e); }
+    }
+    
+    async function approvePlan(planId) {
+        if (!confirm('Approve this standard plan?')) return;
+        try {
+            const response = await fetch(`/api/admin/approve-standard-plan/${planId}/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                
+                // 🔥 CORRECTION : Récupérer les détails complets du plan depuis l'API
+                // pour avoir toutes les informations nécessaires
+                const plansResponse = await fetch('/api/admin/pending-standard-plans/', {
+                    credentials: 'include',
+                    headers: { 'X-CSRFToken': getCSRFToken() }
+                });
+                
+                if (plansResponse.ok) {
+                    const allPlans = await plansResponse.json();
+                    const approvedPlan = allPlans.find(p => p.id == planId);
+                    
+                    if (approvedPlan) {
+                        // Sauvegarder dans les plans approuvés pour la page paiement
+                        let approvedPlans = JSON.parse(localStorage.getItem('approved_standard_plans') || '[]');
+                        
+                        // Extraire les données nécessaires
+                        const extraData = approvedPlan.extra_data || {};
+                        
+                        const planToSave = {
+                            id: approvedPlan.id,
+                            name: approvedPlan.plan_name,
+                            price: 49.99,  // Prix par défaut (tu peux le rendre dynamique)
+                            duration_weeks: extraData.duration_weeks || 4,
+                            weekly_program: extraData.weekly_program || {},
+                            description: approvedPlan.description || '',
+                            sport_advice: extraData.sport_advice || '',
+                            submitted_by: approvedPlan.submitted_by_name || 'Nutritionist'
+                        };
+                        
+                        // Éviter les doublons
+                        const existingIndex = approvedPlans.findIndex(p => p.id === planToSave.id);
+                        if (existingIndex !== -1) {
+                            approvedPlans[existingIndex] = planToSave;
+                        } else {
+                            approvedPlans.push(planToSave);
+                        }
+                        
+                        localStorage.setItem('approved_standard_plans', JSON.stringify(approvedPlans));
+                        console.log('✅ Plan saved to localStorage:', planToSave);
+                        console.log('📦 All approved plans:', approvedPlans);
+                        
+                        // Supprimer des plans en attente
+                        let pendingPlans = JSON.parse(localStorage.getItem('pending_standard_plans') || '[]');
+                        pendingPlans = pendingPlans.filter(p => p.id != planId);
+                        localStorage.setItem('pending_standard_plans', JSON.stringify(pendingPlans));
+                    }
+                }
+                
+                showToast('✅ Plan approved and added to payment page!');
+                loadPendingPlans();
+                renderAllPlansList();
+                
+                // Forcer le rechargement de la page paiement si ouverte dans un autre onglet
+                // (optionnel) - envoyer un message à l'autre onglet
+                localStorage.setItem('plans_updated', Date.now().toString());
+                
+            } else {
+                const error = await response.text();
+                showToast('Error approving plan: ' + error, true);
+            }
+        } catch(e) { 
+            console.error(e); 
+            showToast('Network error: ' + e.message, true);
+        }
+    }
+    
+    
+    async function rejectPlan(planId) {
+        const reason = prompt('Reason for rejection:');
+        if (!reason) return;
+        if (!confirm('Reject this standard plan?')) return;
+        try {
+            const response = await fetch(`/api/admin/reject-standard-plan/${planId}/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+                body: JSON.stringify({ reason: reason }),
+                credentials: 'include'
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                showToast('Plan rejected');
+                const row = document.querySelector(`#pendingPlansTableBody tr[data-plan-id="${planId}"]`);
+                let planName = `Plan #${planId}`;
+                let submittedBy = "Admin";
+                let durationWeeks = 4;
+                if (row) {
+                    const cells = row.querySelectorAll('td');
+                    if (cells[0]) planName = cells[0].innerText;
+                    if (cells[1]) submittedBy = cells[1].innerText;
+                    if (cells[2]) durationWeeks = parseInt(cells[2].innerText) || 4;
+                }
+                
+                const plan = {
+                    id: planId,
+                    plan_name: planName,
+                    type: "standard",
+                    submitted_by: submittedBy,
+                    duration_weeks: durationWeeks,
+                    status: "rejected",
+                    rejection_reason: reason,
+                    created_at: new Date().toISOString()
+                };
+                allPlansData.unshift(plan);
+                renderAllPlansList();
+                loadPendingPlans();
+                loadNotifications();
+            }
+        } catch(e) { console.error(e); }
+    }
+    
+    // ============ PREMIUM PLAN CREATION ============
+    function openPremiumModal() { document.getElementById('premiumPlanModal').classList.add('show'); }
+    function closePremiumModal() { document.getElementById('premiumPlanModal').classList.remove('show'); document.getElementById('premiumPlanForm').reset(); resetFeaturesList(); }
+    
+    function resetFeaturesList() {
+        const container = document.getElementById('premiumFeaturesList');
+        container.innerHTML = `
+            <div class="premium-feature-item">
+                <input type="text" placeholder="e.g., Unlimited consultations" value="Unlimited consultations">
+                <button type="button" onclick="removeFeature(this)">✗</button>
+            </div>
+            <div class="premium-feature-item">
+                <input type="text" placeholder="e.g., AI-powered tracking" value="AI-powered tracking">
+                <button type="button" onclick="removeFeature(this)">✗</button>
+            </div>
+            <div class="premium-feature-item">
+                <input type="text" placeholder="e.g., Personalized meal plans" value="Personalized meal plans">
+                <button type="button" onclick="removeFeature(this)">✗</button>
+            </div>
+        `;
+    }
+    
+    function addFeature() {
+        const container = document.getElementById('premiumFeaturesList');
+        const newFeature = document.createElement('div');
+        newFeature.className = 'premium-feature-item';
+        newFeature.innerHTML = `<input type="text" placeholder="e.g., Priority support" value=""><button type="button" onclick="removeFeature(this)">✗</button>`;
+        container.appendChild(newFeature);
+    }
+    
+    function removeFeature(btn) {
+        const container = document.getElementById('premiumFeaturesList');
+        if (container.children.length > 1) { btn.parentElement.remove(); } 
+        else { showToast("At least one feature is required", true); }
+    }
+    
+    document.getElementById('premiumPlanForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const planName = document.getElementById('premiumPlanName').value.trim();
+        const planDesc = document.getElementById('premiumPlanDesc').value;
+        const planPrice = parseFloat(document.getElementById('premiumPlanPrice').value);
+        const planDuration = parseInt(document.getElementById('premiumPlanDuration').value);
+        
+        if (!planName || !planPrice) { showToast("Please fill plan name and price", true); return; }
+        
+        const features = [];
+        document.querySelectorAll('#premiumFeaturesList .premium-feature-item input').forEach(input => {
+            if (input.value.trim()) { features.push(input.value.trim()); }
+        });
+        
+        const planId = Date.now();
+        const premiumPlan = {
+            id: planId, name: planName, description: planDesc, price: planPrice,
+            duration_months: planDuration, features: features, type: "premium", created_at: new Date().toISOString()
+        };
+        
+        let premiumPlans = JSON.parse(localStorage.getItem('premium_plans') || '[]');
+        premiumPlans.push(premiumPlan);
+        localStorage.setItem('premium_plans', JSON.stringify(premiumPlans));
+        
+        const newPlan = {
+            id: planId, plan_name: planName, type: "premium", submitted_by: "Admin (Premium Offer)",
+            duration_weeks: planDuration * 4, status: "approved", rejection_reason: null,
+            created_at: new Date().toISOString(), is_seasonal: true
+        };
+        allPlansData.unshift(newPlan);
+        renderAllPlansList();
+        showToast(`✅ Premium plan "${planName}" created successfully!`);
+        closePremiumModal();
+    });
+    
+    // ============ ALL PLANS LIST ============
+    async function loadAllPlansList() {
+        try {
+            const response = await fetch('/api/admin/all-diet-plans/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                const apiPlans = await response.json();
+                const premiumPlansFromStorage = JSON.parse(localStorage.getItem('premium_plans') || '[]');
+                const seasonalPlans = premiumPlansFromStorage.map(plan => ({
+                    id: plan.id, plan_name: plan.name, type: "premium",
+                    submitted_by: "Admin (Seasonal Offer)", duration_weeks: plan.duration_months * 4,
+                    status: "approved", rejection_reason: null,
+                    created_at: plan.created_at || new Date().toISOString(), is_seasonal: true
+                }));
+                allPlansData = [...apiPlans, ...seasonalPlans];
+                allPlansData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                renderAllPlansList();
+            } else {
+                allPlansData = [];
+                renderAllPlansList();
+            }
+        } catch(e) { console.error(e); allPlansData = []; renderAllPlansList(); }
+    }
+    
+    function renderAllPlansList() {
+        const statusFilter = document.getElementById('filterPlanStatus')?.value || 'all';
+        const typeFilter = document.getElementById('filterPlanType')?.value || 'all';
+        const searchTerm = document.getElementById('searchPlanName')?.value.toLowerCase() || '';
+        
+        let filteredPlans = [...allPlansData];
+        if (statusFilter !== 'all') { filteredPlans = filteredPlans.filter(p => p.status === statusFilter); }
+        if (typeFilter !== 'all') { filteredPlans = filteredPlans.filter(p => p.type === typeFilter); }
+        if (searchTerm) { filteredPlans = filteredPlans.filter(p => p.plan_name.toLowerCase().includes(searchTerm)); }
+        
+        const tbody = document.getElementById('allPlansTableBody');
+        if (!filteredPlans.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="loading">No plans found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = filteredPlans.map(plan => {
+            const typeBadge = plan.type === 'premium' 
+                ? '<span class="badge-premium"><i class="fas fa-crown"></i> Premium</span>'
+                : '<span class="badge-standard"><i class="fas fa-globe"></i> Standard</span>';
+            const statusBadge = plan.status === 'approved'
+                ? '<span class="badge-approved"><i class="fas fa-check-circle"></i> Approved</span>'
+                : '<span class="badge-rejected"><i class="fas fa-times-circle"></i> Rejected</span>';
+            const reason = plan.rejection_reason 
+                ? `<span style="font-size:0.7rem; color:#dc2626;">${escapeHtml(plan.rejection_reason.substring(0, 50))}${plan.rejection_reason.length > 50 ? '...' : ''}</span>`
+                : '<span style="color:#94a3b8;">—</span>';
+            const date = plan.created_at ? new Date(plan.created_at).toLocaleDateString() : '-';
+            const deleteButton = (plan.type === 'premium' && plan.is_seasonal === true) 
+                ? `<button class="btn-danger btn-sm" onclick="deletePremiumPlanFromHistory(${plan.id}, '${escapeHtml(plan.plan_name)}')" style="margin-left: 5px;">🗑️ Delete</button>`
+                : '';
+            return `<tr data-plan-id="${plan.id}">
+                <td><strong>${escapeHtml(plan.plan_name)}</strong></td>
+                <td>${typeBadge}</td>
+                <td>${escapeHtml(plan.submitted_by)}</td>
+                <td>${plan.duration_weeks} weeks</td>
+                <td>${statusBadge}</td>
+                <td>${reason}</td>
+                <td>${date}</td>
+                <td><button class="btn-outline btn-sm" onclick="viewPlanDetails(${plan.id})">👁️ View</button>${deleteButton}</td>
+            </tr>`;
+        }).join('');
+    }
+    
+    function deletePremiumPlanFromHistory(planId, planName) {
+        if (!confirm(`Delete premium plan "${planName}"?`)) return;
+        const planIndex = allPlansData.findIndex(p => p.id === planId);
+        if (planIndex !== -1) { allPlansData.splice(planIndex, 1); }
+        let premiumPlans = JSON.parse(localStorage.getItem('premium_plans') || '[]');
+        premiumPlans = premiumPlans.filter(p => p.id != planId);
+        localStorage.setItem('premium_plans', JSON.stringify(premiumPlans));
+        renderAllPlansList();
+        showToast(`✅ Premium plan "${planName}" deleted!`);
+    }
+    
+    // ============ MANAGE BLOG ============
+    async function loadPendingBlogPosts() {
+        try {
+            const response = await fetch('/api/blog/all-posts-admin/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                const allPosts = await response.json();
+                const pendingPosts = allPosts.filter(post => post.status === 'pending');
+                const tbody = document.getElementById('pendingBlogPostsTableBody');
+                if (!pendingPosts.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">No pending blog posts</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = pendingPosts.map(post => `<tr>
+                    <td><strong>${escapeHtml(post.title)}</strong></td>
+                    <td>${escapeHtml(post.author_name)}</td>
+                    <td>${post.category}</td>
+                    <td>${new Date(post.created_at).toLocaleDateString()}</td>
+                    <td><button class="btn-primary btn-sm" onclick="viewBlogPostDetails(${post.id})">👁️ Review</button>
+                        <button class="btn-success btn-sm" onclick="approveBlogPost(${post.id})">✅ Approve</button>
+                        <button class="btn-danger btn-sm" onclick="rejectBlogPost(${post.id})">❌ Reject</button></td>
+                </tr>`).join('');
+            }
+        } catch(e) { console.error(e); }
+    }
+    
+    function renderAllBlogPosts() {
+        const statusFilter = document.getElementById('filterBlogStatus')?.value || 'all';
+        const searchTerm = document.getElementById('searchBlogPost')?.value.toLowerCase() || '';
+        let filtered = [...allBlogPosts];
+        if (statusFilter === 'all') { filtered = filtered.filter(p => p.status !== 'pending'); }
+        else { filtered = filtered.filter(p => p.status === statusFilter); }
+        if (searchTerm) { filtered = filtered.filter(p => p.title.toLowerCase().includes(searchTerm)); }
+        
+        const tbody = document.getElementById('allBlogPostsTableBody');
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="6">No blog posts found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = filtered.map(post => {
+            let statusBadge = '';
+            if (post.status === 'published') statusBadge = '<span class="badge-active">✅ Published</span>';
+            else if (post.status === 'pending') statusBadge = '<span class="badge-pending">⏳ Pending</span>';
+            else statusBadge = '<span class="badge-rejected">❌ Rejected</span>';
+            return `<tr>
+                <td><strong>${escapeHtml(post.title)}</strong></td>
+                <td>${escapeHtml(post.author_name)}</td>
+                <td>${post.category}</td>
+                <td>${statusBadge}</td>
+                <td>${new Date(post.created_at).toLocaleDateString()}</td>
+                <td><button class="btn-outline btn-sm" onclick="viewBlogPostDetails(${post.id})">👁️ View</button></td>
+            </tr>`;
+        }).join('');
+    }
+    
+    async function loadAllBlogPosts() {
+        try {
+            const response = await fetch('/api/blog/all-posts-admin/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) { allBlogPosts = await response.json(); renderAllBlogPosts(); }
+        } catch(e) { console.error(e); }
+    }
+    
+    async function viewBlogPostDetails(postId) {
+        try {
+            const response = await fetch(`/api/blog/posts/${postId}/admin/`, {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                currentBlogPost = await response.json();
+                const keyPointsHtml = currentBlogPost.key_points && currentBlogPost.key_points.length > 0
+                    ? `<div style="margin-top: 16px;"><strong>📌 Key Points:</strong><ul>${currentBlogPost.key_points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul></div>`
+                    : '';
+                document.getElementById('blogPostContent').innerHTML = `
+                    <h2 style="color: #27AE60;">${escapeHtml(currentBlogPost.title)}</h2>
+                    <div style="display: flex; gap: 16px; margin: 12px 0; color: #64748b;">
+                        <span><i class="fas fa-user"></i> ${escapeHtml(currentBlogPost.author_name)}</span>
+                        <span><i class="fas fa-tag"></i> ${currentBlogPost.category}</span>
+                        <span><i class="fas fa-clock"></i> ${currentBlogPost.read_time || '5 min read'}</span>
+                    </div>
+                    ${currentBlogPost.featured_image ? `<img src="${currentBlogPost.featured_image}" style="width: 100%; border-radius: 20px; margin-bottom: 16px;">` : ''}
+                    <p><strong>Excerpt:</strong> ${escapeHtml(currentBlogPost.excerpt)}</p>
+                    ${keyPointsHtml}
+                    <hr style="margin: 16px 0;">
+                    <div><strong>📄 Full Content:</strong></div>
+                    <p style="margin-top: 8px; white-space: pre-wrap;">${escapeHtml(currentBlogPost.content)}</p>
+                `;
+                const actionsDiv = document.getElementById('blogPostActions');
+                if (currentBlogPost.status === 'pending') {
+                    actionsDiv.innerHTML = `<button class="btn-success" onclick="approveBlogPost(${postId})" style="flex:1;">✅ Approve</button>
+                        <button class="btn-danger" onclick="rejectBlogPost(${postId})" style="flex:1;">❌ Reject</button>
+                        <button class="btn-outline" onclick="closeBlogModal()" style="flex:1;">Close</button>`;
+                } else {
+                    actionsDiv.innerHTML = `<button class="btn-outline" onclick="closeBlogModal()" style="flex:1;">Close</button>`;
+                }
+                document.getElementById('blogPostModal').style.display = 'flex';
+            }
+        } catch(e) { console.error(e); }
+    }
+    
+    async function approveBlogPost(postId) {
+        if (!confirm('Approve this blog post?')) return;
+        try {
+            const response = await fetch(`/api/blog/posts/${postId}/approve/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+                body: JSON.stringify({ action: 'approve' }),
+                credentials: 'include'
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                showToast('✅ Blog post approved and published!');
+                closeBlogModal();
+                loadPendingBlogPosts();
+                loadAllBlogPosts();
+                loadNotifications();
+            }
+        } catch(e) { console.error(e); }
+    }
+    
+    async function rejectBlogPost(postId) {
+        const reason = prompt('Reason for rejection:');
+        if (!reason) return;
+        if (!confirm('Reject this blog post?')) return;
+        try {
+            const response = await fetch(`/api/blog/posts/${postId}/approve/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+                body: JSON.stringify({ action: 'reject', explanation: reason }),
+                credentials: 'include'
+            });
+            if (response.status === 401 || response.status === 403) { showSessionExpiredModal(); return; }
+            if (response.ok) {
+                showToast('❌ Blog post rejected');
+                closeBlogModal();
+                loadPendingBlogPosts();
+                loadAllBlogPosts();
+                loadNotifications();
+            }
+        } catch(e) { console.error(e); }
+    }
+    
+    function closeBlogModal() { document.getElementById('blogPostModal').style.display = 'none'; currentBlogPost = null; }
+    
+  // ============ MESSAGING SYSTEM (WhatsApp Style) - VERSION ADMIN AVEC PATIENTS ET NUTRITIONNISTES ============
+let currentConversation = null;
+let messagePollingInterval = null;
+
+async function loadConversations() {
+    const container = document.getElementById('contactsList');
+    
+    if (!container) {
+        console.log("contactsList element not found");
+        return;
+    }
+    
+    container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-pulse"></i> Loading contacts...</div>';
+    
+    try {
+        let contacts = [];
+        
+        // Récupérer TOUS les utilisateurs (patients ET nutritionnistes)
+        try {
+            const usersResponse = await fetch('/api/admin/users/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            
+            if (usersResponse.ok) {
+                const users = await usersResponse.json();
+                console.log("📋 Tous les utilisateurs récupérés:", users);
+                
+                for (const user of users) {
+                    // Déterminer le rôle de l'utilisateur
+                    let role = 'user';
+                    let roleIcon = '👤';
+                    let roleLabel = 'User';
+                    let avatarBg = 'linear-gradient(135deg, #27AE60, #2ecc71)';
+                    
+                    if (user.role === 'nutritionist' || user.is_nutritionist === true) {
+                        role = 'nutritionist';
+                        roleIcon = '👩‍⚕️';
+                        roleLabel = 'Nutritionist';
+                        avatarBg = 'linear-gradient(135deg, #FF7A00, #FF9A40)';
+                    } else if (user.role === 'patient' || (!user.role && !user.is_nutritionist)) {
+                        role = 'patient';
+                        roleIcon = '👤';
+                        roleLabel = 'Patient';
+                        avatarBg = 'linear-gradient(135deg, #27AE60, #2ecc71)';
+                    }
+                    
+                    contacts.push({
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: role,
+                        roleIcon: roleIcon,
+                        roleLabel: roleLabel,
+                        avatar: user.name ? user.name.charAt(0).toUpperCase() : (role === 'nutritionist' ? 'N' : 'P'),
+                        avatarBg: avatarBg,
+                        last_message: 'Click to start messaging',
+                        last_message_time: null,
+                        unread_count: 0
+                    });
+                }
+                console.log(`✅ ${contacts.length} contacts trouvés (patients + nutritionnistes)`);
+            }
+        } catch(e) {
+            console.error('Error fetching users:', e);
+        }
+        
+        // Récupérer aussi les nutritionnistes depuis l'autre endpoint si nécessaire
+        try {
+            const nutritionistsResponse = await fetch('/api/admin/nutritionists/', {
+                credentials: 'include',
+                headers: { 'X-CSRFToken': getCSRFToken() }
+            });
+            
+            if (nutritionistsResponse.ok) {
+                const nutritionists = await nutritionistsResponse.json();
+                for (const nut of nutritionists) {
+                    // Vérifier si ce nutritionniste n'est pas déjà dans la liste
+                    const exists = contacts.some(c => c.id === nut.id);
+                    if (!exists) {
+                        contacts.push({
+                            id: nut.id,
+                            name: nut.name,
+                            email: nut.email,
+                            role: 'nutritionist',
+                            roleIcon: '👩‍⚕️',
+                            roleLabel: 'Nutritionist',
+                            avatar: nut.name ? nut.name.charAt(0).toUpperCase() : 'N',
+                            avatarBg: 'linear-gradient(135deg, #FF7A00, #FF9A40)',
+                            last_message: 'Click to start messaging',
+                            last_message_time: null,
+                            unread_count: 0
+                        });
+                    }
+                }
+                console.log(`✅ ${nutritionists.length} nutritionnistes ajoutés`);
+            }
+        } catch(e) {
+            console.log('Error fetching nutritionists:', e);
+        }
+        
+        if (contacts.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-user-plus" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 12px;"></i>
+                    <p style="color: #94a3b8; font-size: 0.85rem;">No users found</p>
+                    <p style="color: #cbd5e1; font-size: 0.7rem;">Users will appear here</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Supprimer les doublons (au cas où)
+        const uniqueContacts = [];
+        const seenIds = new Set();
+        for (const contact of contacts) {
+            if (!seenIds.has(contact.id)) {
+                seenIds.add(contact.id);
+                uniqueContacts.push(contact);
+            }
+        }
+        
+        // Trier les contacts : d'abord les nutritionnistes, puis les patients, puis par nom
+        uniqueContacts.sort((a, b) => {
+            if (a.role === 'nutritionist' && b.role !== 'nutritionist') return -1;
+            if (a.role !== 'nutritionist' && b.role === 'nutritionist') return 1;
+            return a.name.localeCompare(b.name);
+        });
+        
+        // Générer le HTML pour tous les contacts
+        container.innerHTML = uniqueContacts.map(contact => `
+            <div class="contact-item" data-user-id="${contact.id}" data-user-name="${escapeHtml(contact.name)}" data-user-role="${contact.role}" onclick="selectConversation(${contact.id}, '${escapeHtml(contact.name)}', '${contact.role}')">
+                <div class="contact-avatar" style="background: ${contact.avatarBg};">
+                    ${escapeHtml(contact.avatar)}
+                </div>
+                <div class="contact-info">
+                    <div class="contact-name">
+                        ${escapeHtml(contact.name)}
+                        <span style="font-size: 0.65rem; background: rgba(39,174,96,0.1); padding: 2px 8px; border-radius: 20px; margin-left: 6px;">
+                            ${contact.roleIcon} ${contact.roleLabel}
+                        </span>
+                    </div>
+                    <div class="contact-last-message">${contact.last_message}</div>
+                    <div class="contact-time" style="font-size: 0.6rem; color: #94a3b8;">${contact.email || ''}</div>
+                </div>
+                ${contact.unread_count > 0 ? `<div class="unread-badge">${contact.unread_count}</div>` : ''}
+            </div>
+        `).join('');
+        
+        console.log(`✅ ${uniqueContacts.length} contacts affichés (${uniqueContacts.filter(c => c.role === 'nutritionist').length} nutritionnistes, ${uniqueContacts.filter(c => c.role === 'patient').length} patients)`);
+        
+    } catch(e) {
+        console.error('Error loading conversations:', e);
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #dc2626;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Error loading contacts</p>
+                    <button class="btn-outline btn-sm" onclick="loadConversations()" style="margin-top: 12px;">Retry</button>
+                </div>
+            `;
+        }
+    }
+}
+
+async function selectConversation(userId, userName, userRole) {
+    currentConversation = { id: userId, name: userName, role: userRole };
+    
+    // Update active state
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeItem = document.querySelector(`.contact-item[data-user-id="${userId}"]`);
+    if (activeItem) activeItem.classList.add('active');
+    
+    // Load messages
+    await loadMessages(userId, userName, userRole);
+}
+
+async function loadMessages(userId) {
+    const chatContainer = document.getElementById('chatContent');
+    if (!chatContainer) return;
+    
+    // Afficher le header du chat
+    chatContainer.innerHTML = `
+        <div class="chat-header">
+            <div class="chat-header-avatar" style="background: linear-gradient(135deg, #27AE60, #2ecc71);">
+                ${currentConversation.name.charAt(0).toUpperCase()}
+            </div>
+            <div class="chat-header-info">
+                <div class="chat-header-name">${escapeHtml(currentConversation.name)}</div>
+                <div class="chat-header-role">
+                    ${currentConversation.role === 'nutritionist' ? '👩‍⚕️ Nutritionist' : 
+                      currentConversation.role === 'admin' ? '👑 Administrator' : '👤 Patient'}
+                </div>
+            </div>
+        </div>
+        <div class="messages-list" id="messagesList">
+            <div class="loading-messages">
+                <i class="fas fa-spinner fa-pulse"></i> Loading messages...
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <textarea class="chat-input" id="messageInput" placeholder="Type a message..." rows="1" onkeypress="handleEnterKey(event)"></textarea>
+            <button class="send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    `;
+    
+    // Charger l'historique des messages
+    try {
+        const response = await fetch(`/api/users/messages/${userId}/`, {
+            credentials: 'include',
+            headers: { 'X-CSRFToken': getCSRFToken() }
+        });
+        
+        if (response.ok) {
+            const messages = await response.json();
+            const messagesList = document.getElementById('messagesList');
+            
+            if (messages.length === 0) {
+                messagesList.innerHTML = `
+                    <div class="empty-chat">
+                        <i class="fas fa-comment-dots"></i>
+                        <p>No messages yet</p>
+                        <p style="font-size: 0.7rem;">Send a message to start the conversation</p>
+                    </div>
+                `;
+            } else {
+                messagesList.innerHTML = messages.map(msg => `
+                    <div class="message-bubble ${msg.is_mine ? 'message-bubble-mine' : 'message-bubble-theirs'}">
+                        ${!msg.is_mine ? `<div class="message-sender-name">${escapeHtml(msg.sender_name)}</div>` : ''}
+                        <div>${escapeHtml(msg.content)}</div>
+                        <div class="message-time">${msg.time_display}</div>
+                    </div>
+                `).join('');
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+        } else {
+            document.getElementById('messagesList').innerHTML = `
+                <div class="empty-chat">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Error loading messages</p>
+                </div>
+            `;
+        }
+    } catch(e) {
+        console.error('Error loading messages:', e);
+        document.getElementById('messagesList').innerHTML = `
+            <div class="empty-chat">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Error loading messages</p>
+            </div>
+        `;
+    }
+    
+    const input = document.getElementById('messageInput');
+    if (input) input.focus();
+}
+
+
+async function loadChatHistory(userId) {
+    try {
+        const response = await fetch(`/api/users/messages/${userId}/`, {
+            credentials: 'include',
+            headers: { 'X-CSRFToken': getCSRFToken() }
+        });
+        
+        if (response.ok) {
+            const messages = await response.json();
+            const messagesList = document.getElementById('messagesList');
+            if (messagesList && messages.length > 0) {
+                // Supprimer le message "empty-chat"
+                const emptyChat = messagesList.querySelector('.empty-chat');
+                if (emptyChat) emptyChat.remove();
+                
+                // Afficher tous les messages
+                for (const msg of messages) {
+                    const isMine = msg.sender_id === currentUser.id; // À adapter selon votre API
+                    const timeStr = new Date(msg.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                    const messageHtml = `
+                        <div class="message-bubble ${isMine ? 'message-bubble-mine' : 'message-bubble-theirs'}">
+                            ${!isMine ? `<div class="message-sender-name">${escapeHtml(msg.sender_name)}</div>` : ''}
+                            <div>${escapeHtml(msg.content)}</div>
+                            <div class="message-time">${timeStr}</div>
+                        </div>
+                    `;
+                    messagesList.insertAdjacentHTML('beforeend', messageHtml);
+                }
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+        }
+    } catch(e) {
+        console.log('Error loading chat history:', e);
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    if (!input || !currentConversation) return;
+    
+    const content = input.value.trim();
+    if (!content) return;
+    
+    const sendBtn = document.querySelector('.send-btn');
+    if (sendBtn) sendBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/users/send-message/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                receiver_id: currentConversation.id,
+                content: content
+            })
+        });
+        
+        if (response.ok) {
+            input.value = '';
+            input.style.height = 'auto';
+            showToast('Message sent!', false);
+            
+            // Afficher le message envoyé immédiatement
+            const messagesList = document.getElementById('messagesList');
+            if (messagesList) {
+                // Supprimer le message "empty-chat" s'il existe
+                const emptyChat = messagesList.querySelector('.empty-chat');
+                if (emptyChat) emptyChat.remove();
+                
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                const messageHtml = `
+                    <div class="message-bubble message-bubble-mine">
+                        <div>${escapeHtml(content)}</div>
+                        <div class="message-time">${timeStr} <i class="fas fa-check"></i></div>
+                    </div>
+                `;
+                messagesList.insertAdjacentHTML('beforeend', messageHtml);
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+        } else {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            showToast('Error sending message: ' + errorText, true);
+        }
+    } catch(e) {
+        console.error('Error sending message:', e);
+        showToast('Network error sending message', true);
+    } finally {
+        if (sendBtn) sendBtn.disabled = false;
+        if (input) input.focus();
+    }
+}
+
+function startMessagePolling() {
+    if (messagePollingInterval) clearInterval(messagePollingInterval);
+    
+    messagePollingInterval = setInterval(async () => {
+        // Ne recharger que si on n'est pas en train de taper ou si la conversation est ouverte
+        if (document.getElementById('messages')?.classList.contains('active-tab')) {
+            await loadConversations();
+            
+            // Si une conversation est ouverte, rafraîchir les messages
+            if (currentConversation && currentConversation.id) {
+                await fetchMessagesHistory(currentConversation.id);
+            }
+        }
+    }, 5000); // Polling toutes les 5 secondes
+}
+
+// Arrêter le polling
+function stopMessagePolling() {
+    if (messagePollingInterval) {
+        clearInterval(messagePollingInterval);
+        messagePollingInterval = null;
+    }
+}
+
+function handleEnterKey(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+// Auto-resize textarea
+document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList && e.target.classList.contains('chat-input')) {
+        e.target.style.height = 'auto';
+        e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+    }
+});
+
+// Démarrer le polling au chargement et l'arrêter si nécessaire
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        // Page cachée, réduire le polling ou l'arrêter
+        if (messagePollingInterval) {
+            clearInterval(messagePollingInterval);
+            messagePollingInterval = null;
+        }
+    } else {
+        // Page visible, redémarrer le polling
+        if (!messagePollingInterval) startMessagePolling();
+    }
+});
+
+function handleEnterKey(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+// Auto-resize textarea
+document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList && e.target.classList.contains('chat-input')) {
+        e.target.style.height = 'auto';
+        e.target.style.height = Math.min(e.target.scrollHeight, 100) + 'px';
+    }
+});
+
+
+    // ============ NOTIFICATIONS ============
+    let notifications = [], unreadCount = 0;
+    
+    async function loadNotifications() { 
+        try { 
+            const data = await apiGet('/api/admin/notifications/'); 
+            notifications = data.notifications || []; 
+            unreadCount = data.unread_count || 0; 
+            const badge = document.getElementById('notificationBadge'); 
+            if (unreadCount > 0) { badge.style.display = 'block'; badge.innerText = unreadCount > 9 ? '9+' : unreadCount; } 
+            else badge.style.display = 'none'; 
+            const container = document.getElementById('notificationsList'); 
+            if (!notifications.length) { container.innerHTML = '<div class="empty-notifications"><i class="fas fa-bell-slash"></i><p>No notifications</p></div>'; return; } 
+            container.innerHTML = notifications.map(n => `<div class="notification-item ${!n.is_read ? 'unread' : ''}" onclick="markAsRead(${n.id})"><div class="notification-icon"><i class="fas fa-bell"></i></div><div class="notification-content"><div class="notification-title">${escapeHtml(n.title)}</div><div class="notification-message">${escapeHtml(n.message)}</div><div class="notification-time">${n.time_ago}</div></div></div>`).join(''); 
+        } catch(e) { console.error(e); } 
+    }
+    
+    async function markAsRead(id) { await apiPost(`/api/admin/notifications/${id}/read/`, {}); loadNotifications(); }
+    async function markAllAsRead() { await apiPost('/api/admin/notifications/read-all/', {}); loadNotifications(); }
+    
+    // ============ STATS & CHARTS ============
+    let revenueChart, usersPieChart, plansChart;
+    
+    function initRevenueChart(data) { 
+        const ctx = document.getElementById('revenueChart')?.getContext('2d'); 
+        if(ctx && revenueChart) revenueChart.destroy(); 
+        if(ctx && data && data.length) {
+            revenueChart = new Chart(ctx, { 
+                type: 'bar', 
+                data: { labels: data.map(d => d.month), datasets: [{ label: 'Revenue ($)', data: data.map(d => d.revenue), backgroundColor: 'rgba(39,174,96,0.7)', borderRadius: 8 }] }, 
+                options: { responsive: true, maintainAspectRatio: true } 
+            });
+        } else if(ctx) {
+            revenueChart = new Chart(ctx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar'], datasets: [{ label: 'Revenue ($)', data: [2500, 3100, 2800], backgroundColor: 'rgba(39,174,96,0.7)' }] }, options: { responsive: true } });
+        }
+    }
+    
+    function initUsersPieChart(p, n, a) { 
+        const ctx = document.getElementById('usersPieChart')?.getContext('2d'); 
+        if(ctx && usersPieChart) usersPieChart.destroy(); 
+        if(ctx) {
+            usersPieChart = new Chart(ctx, { 
+                type: 'pie', 
+                data: { labels: ['Patients', 'Nutritionists', 'Admins'], datasets: [{ data: [p, n, a], backgroundColor: ['#27AE60', '#FF7A00', '#3498db'] }] }, 
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } } 
+            });
+        }
+    }
+    
+    function initPlansChart(planData) { 
+        const ctx = document.getElementById('plansChart')?.getContext('2d'); 
+        if(ctx && plansChart) plansChart.destroy(); 
+        if(ctx && planData && Object.keys(planData).length) {
+            const labels = Object.keys(planData); 
+            const values = Object.values(planData); 
+            plansChart = new Chart(ctx, { 
+                type: 'bar', 
+                data: { labels: labels, datasets: [{ label: 'Active Subscribers', data: values, backgroundColor: 'rgba(39,174,96,0.7)', borderRadius: 8 }] }, 
+                options: { responsive: true, maintainAspectRatio: true, indexAxis: 'y' } 
+            });
+        } else if(ctx) {
+            plansChart = new Chart(ctx, { type: 'bar', data: { labels: ['Standard', 'Premium'], datasets: [{ label: 'Active Subscribers', data: [45, 28], backgroundColor: 'rgba(39,174,96,0.7)' }] }, options: { responsive: true, indexAxis: 'y' } });
+        }
+    }
+    
+    async function loadAdminStats() {
+        try {
+            const stats = await apiGet('/api/admin/stats/');
+            document.getElementById('totalPatients').innerText = stats.active_patients || 0;
+            document.getElementById('totalNutritionists').innerText = stats.active_nutritionists || 0;
+            document.getElementById('activeSubscriptions').innerText = stats.active_subscriptions || 0;
+            document.getElementById('quarterConsultations').innerText = stats.total_consultations || 0;
+            document.getElementById('aiTrackUsage').innerText = stats.ai_track_usage || 0;
+            const assignStats = await apiGet('/api/admin/assignment-stats/');
+            document.getElementById('pendingAssignments').innerText = assignStats.pending || 0;
+            if (stats.monthly_revenue) initRevenueChart(stats.monthly_revenue);
+            initUsersPieChart(stats.active_patients || 0, stats.active_nutritionists || 0, 1);
+            initPlansChart(stats.plan_distribution || { 'Standard': 0, 'Premium': 0 });
+        } catch(e) { console.error(e); }
+    }
+    
+    // ============ EVENT LISTENERS & INIT ============
+    document.getElementById('markAllReadBtn')?.addEventListener('click', markAllAsRead);
+    document.getElementById('notificationBell')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('notificationDropdown').classList.toggle('show'); loadNotifications(); });
+    document.addEventListener('click', (e) => { if (!document.getElementById('notificationBell')?.contains(e.target)) document.getElementById('notificationDropdown')?.classList.remove('show'); });
+    document.getElementById('approveFromModalBtn')?.addEventListener('click', () => { if (currentRequest) approveRequestById(currentRequest.id); closeRequestModal(); });
+    document.getElementById('rejectFromModalBtn')?.addEventListener('click', () => { if (currentRequest) { closeRequestModal(); showRejectModalForRequest(currentRequest.id, currentRequest.patient_id); } });
+    document.getElementById('addNutritionistBtn')?.addEventListener('click', () => { openAddNutritionistModal(); });
+    document.getElementById('refreshSubscriptionsBtn')?.addEventListener('click', () => { loadSubscriptions(); });
+    document.getElementById('filterPlanStatus')?.addEventListener('change', renderAllPlansList);
+    document.getElementById('filterPlanType')?.addEventListener('change', renderAllPlansList);
+    document.getElementById('searchPlanName')?.addEventListener('input', renderAllPlansList);
+    document.getElementById('refreshAllPlansListBtn')?.addEventListener('click', loadAllPlansList);
+    document.getElementById('filterBlogStatus')?.addEventListener('change', renderAllBlogPosts);
+    document.getElementById('searchBlogPost')?.addEventListener('input', renderAllBlogPosts);
+    document.getElementById('refreshBlogPostsBtn')?.addEventListener('click', () => { loadPendingBlogPosts(); loadAllBlogPosts(); });
+    document.getElementById('createPremiumPlanBtn')?.addEventListener('click', openPremiumModal);
+    document.getElementById('exportDataBtn')?.addEventListener('click', () => alert('Export feature coming soon'));
+    document.getElementById('refreshStats')?.addEventListener('click', () => loadAdminStats());
+    
+    const tabs = document.querySelectorAll('.tab-content');
+    const navItems = document.querySelectorAll('.nav-item');
+    const titles = { 
+        'dashboard-overview': { title: 'Admin Dashboard', subtitle: 'Platform Management' },
+        'manage-users': { title: 'Manage Users', subtitle: 'View and manage all platform users' },
+        'manage-nutritionists': { title: 'Manage Nutritionists', subtitle: 'Verify and manage nutrition experts' },
+        'manage-subscriptions': { title: 'Manage Subscriptions', subtitle: 'Active subscriptions with bonus details' },
+        'assignment-requests': { title: 'Assignment Requests', subtitle: 'Approve or reject assignment requests' },
+        'trial-requests': { title: 'Trial Consultations', subtitle: 'Manage free trial requests' },
+        'manage-plans': { title: 'Manage Plans', subtitle: 'Approve and manage diet plans' },
+        'manage-blog': { title: 'Manage Blog', subtitle: 'Review and publish blog posts' },
+        'message': { title: 'Messages', subtitle: 'Chat with patients' } // 👈 AJOUTER CETTE LIGNE
+    };
+    
+    function switchTab(tabId) {
+        tabs.forEach(t => t.classList.remove('active-tab')); 
+        document.getElementById(tabId)?.classList.add('active-tab'); 
+        navItems.forEach(i => i.classList.remove('active')); 
+        document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active'); 
+        if (titles[tabId]) { 
+            document.getElementById('dynamicTitle').innerText = titles[tabId].title; 
+            document.getElementById('dynamicSubtitle').innerText = titles[tabId].subtitle; 
+        } 
+        if (tabId === 'dashboard-overview') loadAdminStats(); 
+        else if (tabId === 'manage-users') loadUsers(); 
+        else if (tabId === 'manage-nutritionists') loadNutritionists(); 
+        else if (tabId === 'manage-subscriptions') loadSubscriptions(); 
+        else if (tabId === 'assignment-requests') loadAssignmentRequests(); 
+        else if (tabId === 'trial-requests') loadTrialRequests(); 
+        else if (tabId === 'manage-plans') { loadPendingPlans(); loadAllPlansList(); }
+        else if (tabId === 'manage-blog') { loadPendingBlogPosts(); loadAllBlogPosts(); }
+        else if (tabId === 'message') { loadConversations(); startMessagePolling();   }
+    }
+    
+    navItems.forEach(i => { const tabId = i.getAttribute('data-tab'); if (tabId) i.addEventListener('click', () => switchTab(tabId)); });
+    
+    const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('overlay');
+    document.getElementById('menuToggleBtn')?.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); });
+    overlay?.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); });
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => { await apiPost('/api/accounts/logout/', {}); window.location.href = '/login/'; });
+    
+    async function loadAdminInfo() { 
+        try { 
+            const user = await apiGet('/api/users/my-plan/'); 
+            document.getElementById('adminAvatar').innerText = (user.email?.[0] || 'A').toUpperCase(); 
+            document.getElementById('adminName').innerText = user.email?.split('@')[0] || 'Admin'; 
+        } catch(e) {} 
+    }
+    
+    loadAdminInfo();
+    loadNotifications();
+    loadAdminStats();
+    switchTab('dashboard-overview');
+    </script>
+</body>
+</html>

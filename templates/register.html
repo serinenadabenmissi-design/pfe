@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up — NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:        #27AE60;
+  --green-light:  #2ECC71;
+  --green-pale:   #F0F8F3;
+  --orange:       #FF7A00;
+  --orange-light: #FF9A40;
+  --dark:         #0f172a;
+  --text-mid:     #475569;
+  --text-light:   #94a3b8;
+  --border:       rgba(39,174,96,0.15);
+}
+
+html, body { height: 100%; font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* LEFT SIDE */
+.benefits-side {
+  width: 52%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+}
+.brand-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.brand-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(39,174,96,0.55) 0%, rgba(27,94,42,0.6) 100%),
+              radial-gradient(ellipse 65% 55% at 90% 10%, rgba(255,122,0,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.brand-logo {
+  position: relative; z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: white; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.brand-content {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0;
+  max-width: 400px;
+}
+.brand-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.72);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px; border-radius: 40px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
+  width: fit-content;
+}
+.brand-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--orange-light); border-radius: 50%; }
+.brand-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 2.8vw, 46px);
+  font-weight: 900; color: #fff;
+  line-height: 1.12; margin-bottom: 16px;
+}
+.brand-content h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.brand-desc { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 36px; max-width: 360px; }
+.feat-list { display: flex; flex-direction: column; gap: 10px; }
+.feat-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+.feat-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.feat-text strong { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.feat-text span { font-size: 11px; color: rgba(255,255,255,0.65); }
+.brand-float-card {
+  position: absolute; bottom: 44px; right: 28px; z-index: 5;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 18px;
+  padding: 16px 20px; text-align: center; min-width: 120px;
+  animation: floatY 5s ease-in-out infinite;
+}
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.float-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.float-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.10em; text-transform: uppercase; margin-top: 4px; }
+.brand-footer { position: relative; z-index: 2; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 20px; }
+
+/* RIGHT SIDE */
+.form-side {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 48px 56px;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+}
+.form-side::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--green));
+}
+.form-header { margin-bottom: 28px; text-align: center; }
+.form-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.form-header h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.form-header p { font-size: 14px; color: var(--text-mid); }
+
+.role-selection { margin-bottom: 24px; }
+.role-label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 800; color: var(--dark); text-transform: uppercase; }
+.role-options { display: flex; gap: 12px; }
+.role-option { flex: 1; position: relative; cursor: pointer; }
+.role-option input { position: absolute; opacity: 0; cursor: pointer; }
+.role-card {
+  padding: 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.25s ease;
+  background: white;
+  cursor: pointer;
+}
+.role-option input:checked + .role-card {
+  border-color: var(--green);
+  background: rgba(39,174,96,0.05);
+  box-shadow: 0 2px 10px rgba(39,174,96,0.1);
+}
+.role-icon { font-size: 24px; margin-bottom: 6px; }
+.role-title { font-weight: 700; font-size: 13px; color: var(--dark); margin-bottom: 2px; }
+.role-desc { font-size: 10px; color: var(--text-light); }
+
+.alert-msg {
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 13px; text-align: center;
+  margin-bottom: 18px; display: none;
+  font-weight: 600;
+}
+.alert-msg.show { display: block; }
+.alert-msg.error { background: #fee2e2; color: #dc2626; animation: shake 0.4s ease; }
+.alert-msg.success { background: #d1fae5; color: #065f46; }
+@keyframes shake { 0%,100%{ transform: translateX(0); } 25%{ transform: translateX(-5px); } 75%{ transform: translateX(5px); } }
+
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block; margin-bottom: 6px;
+  font-size: 11px; font-weight: 800;
+  color: var(--dark);
+  text-transform: uppercase;
+}
+.input-wrapper { position: relative; }
+.input-icon {
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 11px 14px 11px 42px;
+  border: 1.5px solid #e5eaf0;
+  border-radius: 12px;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--dark);
+  background: #fafbfc;
+  transition: all 0.22s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none; background: white;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.09);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 0; }
+
+.range-wrapper { display: flex; gap: 12px; align-items: center; }
+.range-value {
+  background: var(--green);
+  color: white; padding: 4px 12px; border-radius: 40px;
+  font-size: 11px; font-weight: 700; min-width: 60px; text-align: center;
+}
+input[type="range"] { flex: 1; padding: 0; -webkit-appearance: none; background: transparent; }
+input[type="range"]:focus { outline: none; }
+input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #e2e8f0; border-radius: 3px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--green); margin-top: -5px; cursor: pointer; }
+
+.password-strength { margin-top: 6px; height: 3px; background: #e2e8f0; border-radius: 2px; overflow: hidden; }
+.strength-bar { height: 100%; width: 0%; transition: all 0.3s ease; }
+.strength-text { font-size: 10px; margin-top: 4px; color: var(--text-light); }
+
+.terms-group { margin: 16px 0; }
+.checkbox-label {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; font-size: 12px; color: var(--text-mid);
+}
+.checkbox-label input { width: 16px; height: 16px; accent-color: var(--green); }
+.checkbox-label a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+.signup-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--green) 100%);
+  color: white; border: none; border-radius: 50px;
+  font-size: 14px; font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+  transition: transform 0.18s, box-shadow 0.18s;
+  margin-bottom: 20px;
+}
+.signup-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(39,174,96,0.4); }
+
+.login-link { text-align: center; font-size: 12px; color: var(--text-mid); margin-bottom: 20px; }
+.login-link a { color: var(--green); font-weight: 700; text-decoration: none; }
+
+.bmi-indicator {
+  margin-top: 8px; padding: 8px 12px; background: #f8fafc;
+  border-radius: 10px; font-size: 11px; text-align: center;
+  display: none; border: 1px solid var(--border);
+}
+.bmi-indicator.show { display: block; }
+.bmi-value { font-weight: 800; color: var(--green); }
+.goal-diff {
+  margin-top: 5px;
+  font-size: 10px;
+  color: var(--text-light);
+  text-align: center;
+}
+.goal-diff span { font-weight: 700; color: var(--orange); }
+.helper-text { font-size: 10px; color: var(--text-light); margin-top: 4px; }
+.form-group select[multiple] { padding: 0.6rem; height: auto; min-height: 85px; }
+.form-group select[multiple] option { padding: 6px 8px; font-size: 12px; }
+
+@media (max-width: 1024px) {
+  .benefits-side { padding: 36px 32px; }
+  .form-side { padding: 40px 36px; }
+}
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .benefits-side { width: 100%; position: relative; height: auto; min-height: 50vh; padding: 32px 28px; }
+  .brand-float-card { display: none; }
+  .form-side { padding: 32px 28px; height: auto; overflow-y: visible; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .role-options { flex-direction: column; gap: 8px; }
+}
+@media (max-width: 600px) {
+  .benefits-side { padding: 24px 20px; }
+  .form-side { padding: 24px 20px; }
+  .brand-content h1 { font-size: 24px; }
+  .form-header h2 { font-size: 26px; }
+  .role-card { padding: 8px; }
+}
+@media (max-width: 480px) {
+  .benefits-side { padding: 20px 16px; }
+  .form-side { padding: 20px 16px; }
+  .form-header h2 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="benefits-side">
+  <img class="brand-photo" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&q=85" alt="Healthy lifestyle">
+  <div class="brand-overlay"></div>
+  <a href="/" class="brand-logo">NutriLife 🍎</a>
+  <div class="brand-content">
+    <div class="brand-eyebrow">Join our community</div>
+    <h1>Start your journey to<br><em>Better Health</em> Today</h1>
+    <p class="brand-desc">Join thousands who transformed their lives with personalized nutrition, AI tracking, and expert guidance.</p>
+    <div class="feat-list">
+      <div class="feat-item"><div class="feat-icon">🤖</div><div class="feat-text"><strong>AI Calorie Tracking</strong><span>Snap a photo — instant breakdown</span></div></div>
+      <div class="feat-item"><div class="feat-icon">👩‍⚕️</div><div class="feat-text"><strong>Expert Nutritionists</strong><span>Online consultations worldwide</span></div></div>
+      <div class="feat-item"><div class="feat-icon">📋</div><div class="feat-text"><strong>Personalized Plans</strong><span>Built for your health & goals</span></div></div>
+    </div>
+  </div>
+  <div class="brand-float-card"><div class="float-num">500+</div><div class="float-lbl">Happy Clients</div></div>
+  <div class="brand-footer">© 2026 NutriLife · All rights reserved.</div>
+</div>
+
+<div class="form-side">
+  <div class="form-header"><h2>Create <em>Account</em> 👋</h2><p>Join NutriLife and start your wellness journey</p></div>
+
+  <div class="role-selection">
+    <div class="role-label">I want to sign up as:</div>
+    <div class="role-options">
+      <label class="role-option"><input type="radio" name="role" value="client" checked><div class="role-card"><div class="role-icon">👤</div><div class="role-title">Client / Patient</div><div class="role-desc">Get personalized nutrition plans</div></div></label>
+    </div>
+  </div>
+
+  <div class="alert-msg" id="alertMsg"></div>
+
+  <form id="signupForm">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group"><label>First Name</label><div class="input-wrapper"><span class="input-icon">👤</span><input type="text" id="firstName" placeholder="First name" required></div></div>
+      <div class="form-group"><label>Last Name</label><div class="input-wrapper"><span class="input-icon">👤</span><input type="text" id="lastName" placeholder="Last name" required></div></div>
+    </div>
+
+    <div class="form-group"><label>Email Address</label><div class="input-wrapper"><span class="input-icon">📧</span><input type="email" id="email" placeholder="your@email.com" required></div></div>
+
+    <div class="form-group"><label>Gender</label><div class="input-wrapper"><span class="input-icon">⚥</span><select id="gender" required><option value="">Select Gender</option><option value="female">Female</option><option value="male">Male</option><option value="other">Other</option></select></div></div>
+
+    <div class="form-row">
+      <div class="form-group"><label>Weight (kg)</label><div class="range-wrapper"><input type="range" id="weightRange" min="30" max="200" value="70" step="1"><span class="range-value" id="weightValue">70 kg</span></div><input type="hidden" id="weight" value="70"></div>
+      <div class="form-group"><label>Height (cm)</label><div class="range-wrapper"><input type="range" id="heightRange" min="120" max="220" value="165" step="1"><span class="range-value" id="heightValue">165 cm</span></div><input type="hidden" id="height" value="165"></div>
+    </div>
+
+    <!-- NOUVEAU : Goal Weight -->
+    <div class="form-group">
+      <label>Goal Weight (kg)</label>
+      <div class="range-wrapper">
+        <input type="range" id="goalWeightRange" min="30" max="200" value="65" step="1">
+        <span class="range-value" id="goalWeightValue">65 kg</span>
+      </div>
+      <input type="hidden" id="goalWeight" value="65">
+      <div class="goal-diff" id="goalDiff"></div>
+    </div>
+
+    <div class="bmi-indicator" id="bmiIndicator">📊 Your BMI: <span class="bmi-value" id="bmiValue">--</span> — <span id="bmiCategory">--</span></div>
+
+    <div class="form-row">
+      <div class="form-group"><label>Password</label><div class="input-wrapper"><span class="input-icon">🔒</span><input type="password" id="password" placeholder="Create a password" required onkeyup="checkPasswordStrength()"></div><div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div><div class="strength-text" id="strengthText"></div></div>
+      <div class="form-group"><label>Confirm Password</label><div class="input-wrapper"><span class="input-icon">✓</span><input type="password" id="confirmPassword" placeholder="Confirm password" required></div></div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group"><label>Phone (Optional)</label><div class="input-wrapper"><span class="input-icon">📱</span><input type="tel" id="phone" placeholder="+123 456 7890"></div></div>
+      <div class="form-group"><label>Country</label><div class="input-wrapper"><span class="input-icon">🌍</span><select id="country"><option value="">Select Country</option><option value="DZ">Algeria</option><option value="FR">France</option><option value="US">United States</option></select></div></div>
+    </div>
+
+    <div class="form-group" id="healthConditionsGroup"><label>Health Conditions (Select all that apply)</label><div class="input-wrapper"><span class="input-icon"></span><select id="healthConditions" multiple><option>Weight Loss Resistance</option><option>Hormonal Imbalances</option><option>Metabolic Disorders</option><option>Chronic Diseases</option><option>Digestive Issues</option></select></div><div class="helper-text">Hold Ctrl/Cmd to select multiple</div></div>
+
+    <div class="form-group" id="specializationGroup" style="display: none;"><label>Specialization</label><div class="input-wrapper"><span class="input-icon">📚</span><select id="specialization"><option value="">Select your specialization</option><option>Clinical Nutrition</option><option>Sports Nutrition</option><option>Hormonal Health</option><option>Weight Management</option></select></div></div>
+
+    <div class="terms-group"><label class="checkbox-label"><input type="checkbox" id="terms" required><span>I agree to the <a href="#" onclick="alert('📜 Terms open');return false;">Terms of Service</a> and <a href="#" onclick="alert('🔒 Privacy open');return false;">Privacy Policy</a></span></label></div>
+
+    <button type="submit" class="signup-btn">Create Account →</button>
+  </form>
+
+  <div class="login-link">Already have an account? <a href="/login/">Log in here</a></div>
+</div>
+
+<script>
+// Variables
+const weightRange = document.getElementById('weightRange');
+const weightValue = document.getElementById('weightValue');
+const weightHidden = document.getElementById('weight');
+const heightRange = document.getElementById('heightRange');
+const heightValue = document.getElementById('heightValue');
+const heightHidden = document.getElementById('height');
+const goalWeightRange = document.getElementById('goalWeightRange');
+const goalWeightValue = document.getElementById('goalWeightValue');
+const goalWeightHidden = document.getElementById('goalWeight');
+const goalDiff = document.getElementById('goalDiff');
+
+// Weight slider
+weightRange.addEventListener('input', function() {
+  weightValue.textContent = this.value + ' kg';
+  weightHidden.value = this.value;
+  calculateBMI();
+  updateGoalDiff();
+});
+
+// Height slider
+heightRange.addEventListener('input', function() {
+  heightValue.textContent = this.value + ' cm';
+  heightHidden.value = this.value;
+  calculateBMI();
+});
+
+// Goal Weight slider
+goalWeightRange.addEventListener('input', function() {
+  goalWeightValue.textContent = this.value + ' kg';
+  goalWeightHidden.value = this.value;
+  updateGoalDiff();
+});
+
+// Calculate BMI
+function calculateBMI() {
+  const w = parseFloat(weightHidden.value);
+  const h = parseFloat(heightHidden.value);
+  const bmiInd = document.getElementById('bmiIndicator');
+  const bmiVal = document.getElementById('bmiValue');
+  const bmiCat = document.getElementById('bmiCategory');
+  
+  if (w && h && h > 0) {
+    const bmi = (w / ((h/100)*(h/100))).toFixed(1);
+    bmiVal.textContent = bmi;
+    let cat = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal weight ✓' : bmi < 30 ? 'Overweight' : 'Obese';
+    bmiCat.textContent = cat;
+    bmiInd.classList.add('show');
+  } else {
+    bmiInd.classList.remove('show');
+  }
+}
+
+// Update goal difference display
+function updateGoalDiff() {
+  const currentWeight = parseFloat(weightHidden.value);
+  const goalWeight = parseFloat(goalWeightHidden.value);
+  
+  if (currentWeight && goalWeight) {
+    const diff = currentWeight - goalWeight;
+    const diffAbs = Math.abs(diff).toFixed(1);
+    
+    if (diff > 0) {
+      goalDiff.innerHTML = `🎯 You want to lose <span>${diffAbs} kg</span> to reach your goal`;
+      goalDiff.style.color = '#27AE60';
+    } else if (diff < 0) {
+      goalDiff.innerHTML = `🎯 You want to gain <span>${diffAbs} kg</span> to reach your goal`;
+      goalDiff.style.color = '#FF7A00';
+    } else {
+      goalDiff.innerHTML = `🎯 You're already at your goal weight! 🎉`;
+      goalDiff.style.color = '#27AE60';
+    }
+  }
+}
+
+// Role conditional fields
+const roleRadios = document.querySelectorAll('input[name="role"]');
+const healthGroup = document.getElementById('healthConditionsGroup');
+const specGroup = document.getElementById('specializationGroup');
+const genderSelect = document.getElementById('gender');
+
+roleRadios.forEach(r => r.addEventListener('change', function() {
+  if (this.value === 'client') {
+    healthGroup.style.display = 'block';
+    specGroup.style.display = 'none';
+    genderSelect.required = true;
+  } else {
+    healthGroup.style.display = 'none';
+    specGroup.style.display = 'block';
+    genderSelect.required = false;
+  }
+}));
+document.querySelector('input[value="client"]').dispatchEvent(new Event('change'));
+
+// Password strength
+function checkPasswordStrength() {
+  const pwd = document.getElementById('password').value;
+  const bar = document.getElementById('strengthBar');
+  const text = document.getElementById('strengthText');
+  let s = 0;
+  if (pwd.length >= 8) s++;
+  if (pwd.match(/[a-z]+/)) s++;
+  if (pwd.match(/[A-Z]+/)) s++;
+  if (pwd.match(/[0-9]+/)) s++;
+  if (pwd.match(/[$@#&!]+/)) s++;
+  let msg = '', color = '';
+  if (s < 2) { msg = 'Weak'; color = '#ef4444'; }
+  else if (s < 4) { msg = 'Medium'; color = '#f59e0b'; }
+  else { msg = 'Strong'; color = '#27AE60'; }
+  if (pwd.length === 0) { bar.style.width = '0%'; text.textContent = ''; }
+  else { bar.style.width = (s * 20) + '%'; text.textContent = msg; text.style.color = color; }
+  bar.style.backgroundColor = color;
+}
+
+const pwd = document.getElementById('password');
+const confirmPwd = document.getElementById('confirmPassword');
+function checkMatch() {
+  confirmPwd.style.borderColor = (confirmPwd.value && pwd.value !== confirmPwd.value) ? '#dc2626' : '#e5eaf0';
+}
+pwd.addEventListener('keyup', checkMatch);
+confirmPwd.addEventListener('keyup', checkMatch);
+
+function showAlert(msg, type) {
+  const el = document.getElementById('alertMsg');
+  el.textContent = msg;
+  el.className = 'alert-msg show ' + type;
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+async function handleSignup(e) {
+  e.preventDefault();
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const terms = document.getElementById('terms').checked;
+  const role = document.querySelector('input[name="role"]:checked').value;
+  const gender = document.getElementById('gender').value;
+  const weight = weightHidden.value;
+  const height = heightHidden.value;
+  const goalWeight = goalWeightHidden.value;
+  const phone = document.getElementById('phone').value;
+  const country = document.getElementById('country').value;
+  const health = Array.from(document.getElementById('healthConditions').selectedOptions).map(o => o.value);
+  
+  if (!firstName || !lastName) { showAlert('Please enter full name', 'error'); return; }
+  if (!email || !email.includes('@')) { showAlert('Valid email required', 'error'); return; }
+  if (role === 'client' && !gender) { showAlert('Please select gender', 'error'); return; }
+  if (password.length < 6) { showAlert('Password must be at least 6 characters', 'error'); return; }
+  if (password !== confirm) { showAlert('Passwords do not match', 'error'); return; }
+  if (!terms) { showAlert('Please accept Terms', 'error'); return; }
+
+  try {
+    const response = await fetch('/api/accounts/register/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+      body: JSON.stringify({ firstName, lastName, email, password, role, gender, weight, height, goalWeight, phone, country, healthConditions: health }),
+      credentials: 'include'
+    });
+    const data = await response.json();
+    
+    if (response.ok) {
+      showAlert('✓ Account created! Redirecting to payment...', 'success');
+      setTimeout(() => {
+        window.location.href = '/payment/';
+      }, 1500);
+    } else { 
+      showAlert(data.error || 'Registration failed', 'error'); 
+    }
+  } catch (err) { 
+    showAlert('Connection error', 'error'); 
+  }
+}
+document.getElementById('signupForm').addEventListener('submit', handleSignup);
+
+// Initialize
+calculateBMI();
+updateGoalDiff();
+</script>
+</body>
+</html>

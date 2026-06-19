@@ -1,0 +1,1386 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #2C3E50;
+  overflow-x: hidden;
+}
+
+:root {
+  --green: #27AE60;
+  --green-light: #2ECC71;
+  --green-pale: #F0F8F3;
+  --orange: #FF7A00;
+  --dark: #1e293b;
+  --text-mid: #475569;
+  --text-light: #94a3b8;
+  --border: rgba(39,174,96,0.15);
+  --bg-light: #ffffff;
+  --bg-soft: #f9fafb;
+}
+
+/* ─── NAVBAR ─── */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 1.8rem;
+  font-family: 'Playfair Display', serif;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover { transform: scale(1.02); }
+
+.menu-icon {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--green);
+  transition: transform 0.3s ease;
+  order: 2;
+}
+
+.menu-icon:hover { transform: scale(1.1); }
+
+nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.navbar nav a {
+  text-decoration: none;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.3s;
+  padding: 0.5rem 0;
+}
+
+.navbar nav a::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 3px;
+  background: linear-gradient(90deg, #27AE60, #2ECC71);
+  transition: width 0.3s;
+  border-radius: 2px;
+}
+
+.navbar nav a:hover::before,
+.navbar nav a.active::before { width: 100%; }
+
+.book-btn {
+  background: linear-gradient(135deg, #FF7A00 0%, #27AE60 100%);
+  border: none;
+  padding: 0;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+  overflow: hidden;
+}
+
+.book-btn a {
+  display: inline-block;
+  padding: 12px 28px;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.book-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(39,174,96,0.4);
+}
+
+/* ─── HERO ─── */
+.contact-hero {
+  position: relative;
+  min-height: 46vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6d5 50%, #e8f5e9 100%);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(255,122,0,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 10% 80%, rgba(46,204,113,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-blob {
+  position: absolute;
+  right: -80px; top: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: blobPulse 6s ease-in-out infinite;
+}
+
+@keyframes blobPulse {
+  0%,100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.08) translateY(-20px); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 80px 5%;
+  max-width: 720px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(39,174,96,0.1);
+  border: 1px solid rgba(39,174,96,0.2);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 40px;
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--green-light);
+  border-radius: 50%;
+}
+
+.contact-hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 5.5vw, 68px);
+  font-weight: 900;
+  color: var(--dark);
+  line-height: 1.08;
+  margin-bottom: 20px;
+}
+
+.contact-hero h1 em {
+  font-style: italic;
+  color: var(--orange);
+}
+
+.contact-hero p {
+  font-size: 17px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  max-width: 520px;
+}
+
+/* ─── CONTACT CARDS ROW ─── */
+.info-strip {
+  background: var(--bg-light);
+  padding: 0 5%;
+}
+
+.info-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  transform: translateY(-40px);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.info-card {
+  background: white;
+  padding: 36px 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border-right: 1px solid var(--border);
+  transition: background 0.3s;
+  cursor: default;
+}
+
+.info-card:last-child { border-right: none; }
+
+.info-card:hover { background: var(--green-pale); }
+
+.info-icon {
+  width: 52px; height: 52px;
+  background: var(--green-pale);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.info-card:hover .info-icon { transform: scale(1.1) rotate(3deg); }
+
+.info-text h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.info-text p {
+  font-size: 13.5px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.info-text a {
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  transition: color 0.2s;
+}
+
+.info-text a:hover { color: var(--orange); }
+
+/* ─── MAIN CONTACT SECTION ─── */
+.contact-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 5% 100px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* ─── LEFT: INFO PANEL ─── */
+.contact-info-panel { }
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 24px; height: 2px;
+  background: var(--green);
+  border-radius: 2px;
+}
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  color: var(--dark);
+  line-height: 1.12;
+  margin-bottom: 16px;
+}
+
+.panel-title em { font-style: italic; color: var(--orange); }
+
+.panel-sub {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: 40px;
+}
+
+/* Hours */
+.hours-block {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.hours-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.hours-row:last-child { border-bottom: none; }
+
+.hours-row .day { color: var(--text-mid); font-weight: 600; }
+
+.hours-row .time {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.hours-row .badge-closed {
+  background: rgba(239,68,68,0.1);
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.hours-row .badge-open {
+  background: rgba(39,174,96,0.1);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Social */
+.social-block {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.social-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.social-link:hover {
+  background: var(--green-pale);
+  border-color: var(--border);
+  transform: translateX(4px);
+}
+
+.social-link .s-icon {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.s-fb { background: rgba(59,130,246,0.1); }
+.s-ig { background: rgba(236,72,153,0.1); }
+.s-tw { background: rgba(14,165,233,0.1); }
+.s-li { background: rgba(59,130,246,0.08); }
+
+.social-link .s-info h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 1px;
+}
+
+.social-link .s-info span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* ─── RIGHT: FORM ─── */
+.contact-form-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 48px 40px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 100px;
+}
+
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.form-header p {
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.form-group label span { color: var(--orange); }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fafafa;
+  color: var(--dark);
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  outline: none;
+  transition: all 0.25s;
+  appearance: none;
+}
+
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: #94a3b8; }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--green);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(39,174,96,0.08);
+}
+
+.form-group textarea {
+  height: 130px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.form-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  accent-color: var(--green);
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.form-check label {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.form-check label a {
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--green) 100%);
+  color: white;
+  border: none;
+  padding: 18px 32px;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 24px rgba(39,174,96,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(39,174,96,0.35);
+}
+
+.submit-btn:active { transform: translateY(0); }
+
+.form-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ─── SUCCESS MESSAGE ─── */
+.success-msg {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 0;
+  gap: 16px;
+}
+
+.success-msg.show { display: flex; }
+
+.success-icon {
+  width: 80px; height: 80px;
+  background: var(--green-pale);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-msg h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.success-msg p { font-size: 14px; color: var(--text-mid); max-width: 300px; line-height: 1.7; }
+
+.success-msg button {
+  margin-top: 8px;
+  background: var(--green-pale);
+  border: 1px solid var(--border);
+  color: var(--green);
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.success-msg button:hover { background: var(--green); color: white; }
+
+/* ─── MAP SECTION ─── */
+.map-section {
+  background: var(--bg-light);
+  padding: 80px 5%;
+}
+
+.map-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.map-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.map-header h2 em { font-style: italic; color: var(--orange); }
+
+.map-header p { font-size: 15px; color: var(--text-mid); }
+
+.map-wrap {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  position: relative;
+  height: 400px;
+  background: linear-gradient(145deg, #e8f5e9, #c8e6d5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.map-placeholder-icon { font-size: 64px; }
+
+.map-placeholder-text {
+  font-size: 15px;
+  color: var(--text-mid);
+  font-weight: 600;
+}
+
+.map-pin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ─── FAQ ─── */
+.faq-section {
+  padding: 80px 5%;
+  background: var(--bg-soft);
+}
+
+.faq-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.faq-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.faq-header h2 em { font-style: italic; color: var(--orange); }
+.faq-header p { font-size: 15px; color: var(--text-mid); }
+
+.faq-item {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.faq-item:hover { box-shadow: 0 8px 24px rgba(39,174,96,0.08); }
+
+.faq-question {
+  padding: 22px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+}
+
+.faq-question h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark);
+  flex: 1;
+}
+
+.faq-toggle {
+  width: 32px; height: 32px;
+  background: var(--green-pale);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--green);
+  flex-shrink: 0;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.faq-item.open .faq-toggle {
+  background: var(--green);
+  color: white;
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+  padding: 0 24px;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 200px;
+  padding: 0 24px 22px;
+}
+
+.faq-answer p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  background: white;
+  color: #2C3E50;
+  border-top: 1px solid var(--border);
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 5% 30px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 1rem;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.footer-description {
+  color: #5a6e7c;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.social-icons { display: flex; gap: 1rem; margin-top: 1rem; }
+
+.social-icon {
+  width: 38px; height: 38px;
+  background: rgba(39,174,96,0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--green);
+  font-size: 1.1rem;
+}
+
+.social-icon:hover { background: var(--green); color: white; transform: translateY(-3px); }
+
+.footer-col h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.4rem;
+  color: #2C3E50;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-col h4::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 0;
+  width: 36px; height: 3px;
+  background: var(--green);
+  border-radius: 2px;
+}
+
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 0.7rem; }
+
+.footer-links a {
+  color: #5a6e7c;
+  text-decoration: none;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-links a:hover { color: var(--green); transform: translateX(4px); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 1.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.copyright { color: var(--text-light); font-size: 0.85rem; }
+
+.footer-bottom-links { display: flex; gap: 2rem; }
+
+.footer-bottom-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.3s;
+}
+
+.footer-bottom-links a:hover { color: var(--green); }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .contact-main { grid-template-columns: 1fr; gap: 40px; }
+  .contact-form-wrap { position: static; }
+  .info-strip-inner { grid-template-columns: 1fr; transform: translateY(-20px); }
+  .info-card { border-right: none; border-bottom: 1px solid var(--border); }
+  .info-card:last-child { border-bottom: none; }
+}
+
+@media (max-width: 768px) {
+  .menu-icon { display: block; }
+  nav {
+    position: fixed;
+    top: 70px; left: -100%;
+    width: 100%; height: calc(100vh - 70px);
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    transition: left 0.4s ease;
+    z-index: 999;
+  }
+  nav.active { left: 0; }
+  .navbar nav a { font-size: 1.2rem; padding: 0.8rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .contact-form-wrap { padding: 32px 24px; }
+  .hero-content { padding: 60px 5%; }
+  .contact-hero h1 { font-size: 32px; }
+  .footer-col { text-align: center; }
+  .footer-col h4::after { left: 50%; transform: translateX(-50%); }
+  .footer-links a { justify-content: center; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .social-icons { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .logo { font-size: 1.2rem; }
+  .book-btn a { padding: 8px 16px; font-size: 0.85rem; }
+  .contact-hero h1 { font-size: 28px; }
+  .panel-title { font-size: 26px; }
+  .map-wrap { height: 260px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<header class="navbar">
+  <a href="{% url 'home' %}" class="logo">NutriLife 🍎</a>
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <nav id="navMenu">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'about' %}">About Us</a>
+    <a href="{% url 'feedback' %}">Feedback</a>
+    <a href="{% url 'blog' %}">Blog</a>
+    <a href="#" class="active">Contact</a>
+  </nav>
+  <button class="book-btn"><a href="{% url 'login' %}">Book Consultation</a></button>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="contact-hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Get In Touch</div>
+    <h1>We'd love to <em>hear from you</em>.</h1>
+    <p>Whether you have a question about our services, want to book a consultation, or just want to say hello — our team is here and happy to help.</p>
+  </div>
+</section>
+
+<!-- ═══ INFO STRIP ═══ -->
+<div class="info-strip">
+  <div class="info-strip-inner reveal">
+    <div class="info-card">
+      <div class="info-icon">📧</div>
+      <div class="info-text">
+        <h4>Email Us</h4>
+        <p>We reply within 24 hours</p>
+        <a href="mailto:hello@nutrilife.com">hello@nutrilife.com</a>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">📞</div>
+      <div class="info-text">
+        <h4>Call Us</h4>
+        <p>Mon – Fri, 9am – 6pm</p>
+        <a href="tel:+213555123456">+213 555 123 456</a>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">📍</div>
+      <div class="info-text">
+        <h4>Our Office</h4>
+        <p>Algiers, Algeria</p>
+        <a href="#map">View on map →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN CONTACT ═══ -->
+<div class="contact-main">
+
+  <!-- LEFT: INFO PANEL -->
+  <div class="contact-info-panel">
+    <div class="section-eyebrow reveal">Reach Out</div>
+    <h2 class="panel-title reveal">Let's start your <em>health journey</em> together.</h2>
+    <p class="panel-sub reveal">Fill out the form or reach us directly through any of the channels below. We typically respond within one business day.</p>
+
+    <!-- Hours -->
+    <div class="hours-block reveal">
+      <div class="hours-title">🕐 Consultation Hours</div>
+      <div class="hours-row">
+        <span class="day">Monday – Wednesday</span>
+        <span class="time">9:00 AM – 6:00 PM</span>
+      </div>
+      <div class="hours-row">
+        <span class="day">Thursday – Friday</span>
+        <span class="time">9:00 AM – 4:00 PM</span>
+      </div>
+      <div class="hours-row">
+        <span class="day">Saturday</span>
+        <span class="time">10:00 AM – 2:00 PM</span>
+      </div>
+      <div class="hours-row">
+        <span class="day">Sunday</span>
+        <span class="badge-closed">Closed</span>
+      </div>
+    </div>
+
+    <!-- Social -->
+    <div class="social-block reveal">
+      <div class="social-title">Follow Us</div>
+      <div class="social-links">
+        <a href="#" class="social-link">
+          <div class="s-icon s-fb">📘</div>
+          <div class="s-info">
+            <h5>Facebook</h5>
+            <span>@NutriLifeOfficial</span>
+          </div>
+        </a>
+        <a href="#" class="social-link">
+          <div class="s-icon s-ig">📷</div>
+          <div class="s-info">
+            <h5>Instagram</h5>
+            <span>@nutrilife.dz</span>
+          </div>
+        </a>
+        <a href="#" class="social-link">
+          <div class="s-icon s-tw">🐦</div>
+          <div class="s-info">
+            <h5>Twitter / X</h5>
+            <span>@NutriLifeHQ</span>
+          </div>
+        </a>
+        <a href="#" class="social-link">
+          <div class="s-icon s-li">💼</div>
+          <div class="s-info">
+            <h5>LinkedIn</h5>
+            <span>NutriLife Nutrition</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="contact-form-wrap reveal">
+    <div id="formContent">
+      <div class="form-header">
+        <h3>Send us a message ✉️</h3>
+        <p>We'll get back to you within one business day.</p>
+      </div>
+
+      <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name <span>*</span></label>
+            <input type="text" placeholder="Your first name" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name <span>*</span></label>
+            <input type="text" placeholder="Your last name" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address <span>*</span></label>
+          <input type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+213 000 000 000">
+        </div>
+
+        <div class="form-group">
+          <label>Subject <span>*</span></label>
+          <select required>
+            <option value="" disabled selected>Select a topic…</option>
+            <option value="consultation">Book a Consultation</option>
+            <option value="ai">AI Calorie Tracker</option>
+            <option value="plan">Personalized Plan</option>
+            <option value="feedback">Feedback / Review</option>
+            <option value="partnership">Partnership</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Message <span>*</span></label>
+          <textarea id="msgArea" placeholder="Tell us how we can help you…" maxlength="500" required oninput="updateCount()"></textarea>
+          <div class="char-count"><span id="charCount">0</span> / 500</div>
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" id="consent" required>
+          <label for="consent">I agree to the <a href="#">Privacy Policy</a> and consent to NutriLife storing my information to process this request.</label>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span>Send Message</span>
+          <span>→</span>
+        </button>
+        <div class="form-note">🔒 Your data is secure and never shared with third parties.</div>
+      </form>
+    </div>
+
+    <!-- Success State -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">✅</div>
+      <h4>Message Sent!</h4>
+      <p>Thank you for reaching out. We'll get back to you within one business day.</p>
+      <button onclick="resetForm()">Send another message</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAP ═══ -->
+<section class="map-section" id="map">
+  <div class="map-inner">
+    <div class="map-header reveal">
+      <h2>Find us in <em>Algiers</em></h2>
+      <p>Our consultations are primarily online — but we're always happy to connect locally.</p>
+    </div>
+    <div class="map-wrap reveal">
+      <div class="map-placeholder-icon">🗺️</div>
+      <div class="map-placeholder-text">Algiers, Algeria</div>
+      <div class="map-pin-badge">📍 Algiers, Algeria · Available Worldwide</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq-section">
+  <div class="faq-inner">
+    <div class="faq-header reveal">
+      <h2>Frequently <em>Asked Questions</em></h2>
+      <p>Quick answers to the questions we hear most often.</p>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h4>How quickly will I receive a response?</h4>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <p>We aim to respond to all inquiries within one business day. For urgent matters, feel free to call us directly during consultation hours.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h4>Can I book a consultation directly from here?</h4>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <p>Yes! Select "Book a Consultation" in the subject field of the form above, or use the "Book Consultation" button in the navigation. We'll confirm your appointment within 24 hours.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h4>Are consultations available internationally?</h4>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <p>Absolutely. All consultations are conducted online via video call, making our services available to clients in any country, any time zone.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h4>What languages do you support?</h4>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <p>Our team currently offers consultations in Arabic, French, and English to best serve our diverse community of patients.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <h4>Is my personal health information kept private?</h4>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-answer">
+        <p>Yes. We take privacy very seriously. All personal and health information you share with us is stored securely and never disclosed to third parties without your explicit consent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a href="{% url 'home' %}" class="footer-logo">NutriLife 🍎</a>
+        <p class="footer-description">Your trusted partner for personalized nutrition and a healthy lifestyle. Science-based solutions to transform your health.</p>
+        <div class="social-icons">
+          <a href="#" class="social-icon">📘</a>
+          <a href="#" class="social-icon">📷</a>
+          <a href="#" class="social-icon">🐦</a>
+          <a href="#" class="social-icon">💼</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}">🏠 Home</a></li>
+          <li><a href="{% url 'about' %}">📖 About Us</a></li>
+          <li><a href="{% url 'blog' %}">📝 Blog</a></li>
+          <li><a href="#">📬 Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Our Services</h4>
+        <ul class="footer-links">
+          <li><a href="#">⚖️ Weight Management</a></li>
+          <li><a href="#">🔄 Hormonal Balance</a></li>
+          <li><a href="#">❤️ Heart Health</a></li>
+          <li><a href="#">🧬 Metabolic Disorders</a></li>
+          <li><a href="#">🤖 AI Calorie Tracker</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@nutrilife.com">📧 hello@nutrilife.com</a></li>
+          <li><a href="tel:+213555123456">📞 +213 555 123 456</a></li>
+          <li><a href="#">📍 Algiers, Algeria</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">© 2026 NutriLife. All rights reserved.</div>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── MOBILE MENU ───
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('active');
+}
+document.querySelectorAll('#navMenu a').forEach(link => {
+  link.addEventListener('click', () => document.getElementById('navMenu').classList.remove('active'));
+});
+
+// ─── SCROLL REVEAL ───
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
+      const idx = siblings.indexOf(entry.target);
+      setTimeout(() => entry.target.classList.add('visible'), idx * 90);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// ─── CHAR COUNT ───
+function updateCount() {
+  const ta = document.getElementById('msgArea');
+  document.getElementById('charCount').textContent = ta.value.length;
+}
+
+// ─── FORM SUBMIT ───
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.submit-btn');
+  btn.textContent = 'Sending…';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('successMsg').classList.add('show');
+  }, 1200);
+}
+
+function resetForm() {
+  document.getElementById('contactForm').reset();
+  document.getElementById('charCount').textContent = '0';
+  document.getElementById('formContent').style.display = 'block';
+  document.getElementById('successMsg').classList.remove('show');
+  const btn = document.querySelector('.submit-btn');
+  btn.innerHTML = '<span>Send Message</span><span>→</span>';
+  btn.style.opacity = '1';
+  btn.disabled = false;
+}
+
+// ─── FAQ ACCORDION ───
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>

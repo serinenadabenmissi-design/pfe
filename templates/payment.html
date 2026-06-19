@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiement Sécurisé — NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:        #27AE60;
+  --green-light:  #2ECC71;
+  --green-pale:   #F0F8F3;
+  --orange:       #FF7A00;
+  --orange-light: #FF9A40;
+  --dark:         #0f172a;
+  --text-mid:     #475569;
+  --text-light:   #94a3b8;
+  --border:       rgba(39,174,96,0.15);
+}
+
+html, body { height: 100%; font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* LEFT SIDE */
+.benefits-side {
+  width: 52%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+}
+.brand-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.brand-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(39,174,96,0.55) 0%, rgba(27,94,42,0.6) 100%),
+              radial-gradient(ellipse 65% 55% at 90% 10%, rgba(255,122,0,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.brand-logo {
+  position: relative; z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: white; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.brand-content {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0;
+  max-width: 400px;
+}
+.brand-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.72);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px; border-radius: 40px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
+  width: fit-content;
+}
+.brand-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--orange-light); border-radius: 50%; }
+.brand-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 2.8vw, 46px);
+  font-weight: 900; color: #fff;
+  line-height: 1.12; margin-bottom: 16px;
+}
+.brand-content h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.brand-desc { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 36px; max-width: 360px; }
+.feat-list { display: flex; flex-direction: column; gap: 10px; }
+.feat-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+.feat-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.feat-text strong { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.feat-text span { font-size: 11px; color: rgba(255,255,255,0.65); }
+.brand-float-card {
+  position: absolute; bottom: 44px; right: 28px; z-index: 5;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 18px;
+  padding: 16px 20px; text-align: center; min-width: 120px;
+  animation: floatY 5s ease-in-out infinite;
+}
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.float-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.float-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.10em; text-transform: uppercase; margin-top: 4px; }
+.brand-footer { position: relative; z-index: 2; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 20px; }
+
+/* RIGHT SIDE */
+.form-side {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 48px 56px;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+}
+.form-side::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--green));
+}
+.form-header { margin-bottom: 28px; text-align: center; }
+.form-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.form-header h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.form-header p { font-size: 14px; color: var(--text-mid); }
+
+/* FREE TRIAL BUTTON - STYLE COMME SUR LA PHOTO (en haut de la page) */
+.free-trial-top {
+  background: linear-gradient(135deg, #FFF8EB, #FFFAF0);
+  border: 2px solid var(--orange);
+  border-radius: 50px;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(255,122,0,0.15);
+}
+.free-trial-top:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #FFF5E0, #FFF0D8);
+  box-shadow: 0 8px 20px rgba(255,122,0,0.25);
+}
+.free-trial-top .trial-icon {
+  font-size: 28px;
+}
+.free-trial-top .trial-text {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--orange);
+}
+.free-trial-top .trial-sub {
+  font-size: 12px;
+  color: var(--text-mid);
+}
+.free-trial-top .arrow {
+  font-size: 20px;
+  color: var(--orange);
+  transition: transform 0.2s;
+}
+.free-trial-top:hover .arrow {
+  transform: translateX(5px);
+}
+
+/* Plan Tabs */
+.plan-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 6px;
+  border-radius: 60px;
+}
+.plan-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--text-light);
+  transition: all 0.3s;
+}
+.plan-tab.active {
+  background: white;
+  color: var(--green);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.plan-tab:hover:not(.active) {
+  color: var(--green);
+}
+
+/* Plans List */
+.plans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.plan-card {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 16px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.plan-card:hover {
+  transform: translateX(4px);
+  background: #f0fdf4;
+}
+.plan-card.selected {
+  border-color: var(--green);
+  background: linear-gradient(135deg, rgba(39,174,96,0.08), rgba(255,122,0,0.04));
+}
+.plan-info h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+.plan-info p {
+  font-size: 0.7rem;
+  color: var(--text-mid);
+}
+.plan-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--green);
+}
+.plan-price span {
+  font-size: 0.7rem;
+  font-weight: normal;
+}
+
+/* BONUS SECTION */
+.bonus-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #FFF8EB, #ffffff);
+  border-radius: 24px;
+  border: 1px solid #FFE2B5;
+  display: block;
+}
+.bonus-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bonus-title::before {
+  content: "✨";
+  font-size: 16px;
+}
+.bonus-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.bonus-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.bonus-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+.bonus-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+.bonus-check label {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--dark);
+  cursor: pointer;
+}
+.bonus-controls {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+.bonus-control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bonus-control-group span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+.bonus-slider {
+  width: 180px;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+.bonus-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--green);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.bonus-value {
+  background: var(--green-pale);
+  padding: 4px 12px;
+  border-radius: 40px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  min-width: 60px;
+  text-align: center;
+}
+.bonus-price {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--orange);
+  min-width: 70px;
+}
+.bonus-note {
+  font-size: 10px;
+  color: var(--text-light);
+  margin-left: auto;
+}
+
+/* Duration Section */
+.duration-section {
+  margin: 20px 0;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 20px;
+}
+.duration-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.duration-slider {
+  width: 100%;
+  height: 5px;
+  -webkit-appearance: none;
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+.duration-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--green);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.duration-value {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+/* Selected Offer Card */
+.selected-offer-card {
+  background: linear-gradient(135deg, var(--green-pale), #ffffff);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.selected-offer-card .offer-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.selected-offer-card .offer-price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--green);
+}
+
+/* Payment Form */
+.payment-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--dark);
+  text-transform: uppercase;
+}
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+.form-group input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border: 1.5px solid #e5eaf0;
+  border-radius: 14px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--dark);
+  background: #fafbfc;
+  transition: all 0.22s;
+}
+.form-group input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.09);
+}
+.card-row {
+  display: flex;
+  gap: 14px;
+}
+.card-row .form-group {
+  flex: 1;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--green) 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+  transition: transform 0.18s, box-shadow 0.18s;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(39,174,96,0.4);
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+}
+
+/* Bottom free trial button (garde le style original aussi) */
+.free-trial-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.free-trial-btn:hover {
+  background: var(--green);
+  color: white;
+}
+
+.toast-msg {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #27AE60;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.toast-msg.show { opacity: 0.9; }
+.toast-msg.error { background: #dc2626; }
+
+@media (max-width: 1024px) {
+  .benefits-side { padding: 36px 32px; }
+  .form-side { padding: 40px 36px; }
+}
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .benefits-side { width: 100%; position: relative; height: auto; min-height: 50vh; padding: 32px 28px; }
+  .brand-float-card { display: none; }
+  .form-side { padding: 32px 28px; height: auto; overflow-y: visible; }
+  .plan-tabs { gap: 8px; }
+  .plan-tab { padding: 8px 16px; font-size: 12px; }
+  .card-row { flex-direction: column; gap: 0; }
+  .bonus-controls { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 600px) {
+  .benefits-side { padding: 24px 20px; }
+  .form-side { padding: 24px 20px; }
+  .brand-content h1 { font-size: 24px; }
+  .form-header h2 { font-size: 26px; }
+}
+@media (max-width: 480px) {
+  .benefits-side { padding: 20px 16px; }
+  .form-side { padding: 20px 16px; }
+  .form-header h2 { font-size: 24px; }
+  .plan-card { flex-direction: column; text-align: center; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="benefits-side">
+  <img class="brand-photo" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&q=85" alt="Healthy lifestyle">
+  <div class="brand-overlay"></div>
+  <a href="home.html" class="brand-logo">NutriLife 🍎</a>
+  <div class="brand-content">
+    <div class="brand-eyebrow">Secure payment</div>
+    <h1>Invest in your <em>health today</em></h1>
+    <p class="brand-desc">Choose the plan that fits your wellness journey. Secure payment, instant activation.</p>
+    <div class="feat-list">
+      <div class="feat-item"><div class="feat-icon">🤖</div><div class="feat-text"><strong>AI-Powered Tracking</strong><span>Smart meal analysis 24/7</span></div></div>
+      <div class="feat-item"><div class="feat-icon">👩‍⚕️</div><div class="feat-text"><strong>Expert Nutritionists</strong><span>Live consultations available</span></div></div>
+      <div class="feat-item"><div class="feat-icon">⭐</div><div class="feat-text"><strong>98% Satisfaction</strong><span>From our happy clients</span></div></div>
+    </div>
+  </div>
+  <div class="brand-float-card"><div class="float-num">SECURE</div><div class="float-lbl">Payment</div></div>
+  <div class="brand-footer">© 2026 NutriLife · Secure payment</div>
+</div>
+
+<div class="form-side">
+ 
+  <div class="free-trial-top" id="freeTrialTopBtn">
+   
+    <div>
+      <div class="trial-text">Free trial consultation!</div>
+      <div class="trial-sub">Meet a nutritionist before you buy</div>
+    </div>
+    <span class="arrow">→</span>
+  </div>
+
+  <div class="form-header">
+    <h2>Complete your <em>purchase</em></h2>
+    <p>Secure payment, instant activation</p>
+  </div>
+
+  <div class="plan-tabs">
+    <button class="plan-tab active" data-plan-type="standard">📋 Offres Standard</button>
+    <button class="plan-tab" data-plan-type="premium">⭐ Offres Premium</button>
+  </div>
+
+  <!-- Standard Plans -->
+  <div id="standardPlans" class="plans-list">
+    <div class="plan-card" data-plan-name="30-Day Metabolic Weight Loss" data-plan-price="49.99" data-plan-type="standard">
+      <div class="plan-info">
+        <h4>30-Day Metabolic Weight Loss</h4>
+        <p>Designed to boost metabolism and burn fat</p>
+      </div>
+      <div class="plan-price">$49.99<span>/mo</span></div>
+    </div>
+    <div class="plan-card" data-plan-name="Muscle Builder Pro" data-plan-price="38" data-plan-type="standard">
+      <div class="plan-info">
+        <h4>Muscle Builder Pro</h4>
+        <p>Spécialement conçu pour développer la masse musculaire</p>
+      </div>
+      <div class="plan-price">$38<span>/mo</span></div>
+    </div>
+  </div>
+
+  <!-- Premium Plans -->
+  <div id="premiumPlans" class="plans-list" style="display: none;">
+    <div class="plan-card" data-plan-name="Ultimate Wellness Premium" data-plan-price="79.99" data-plan-type="premium">
+      <div class="plan-info">
+        <h4>Ultimate Wellness Premium</h4>
+        <p>Full access + priority support + unlimited consultations</p>
+      </div>
+      <div class="plan-price">$79.99<span>/mo</span></div>
+    </div>
+    <div class="plan-card" data-plan-name="Elite Nutrition Pro" data-plan-price="99.99" data-plan-type="premium">
+      <div class="plan-info">
+        <h4>Elite Nutrition Pro</h4>
+        <p>Everything in Premium + 1-on-1 weekly coaching</p>
+      </div>
+      <div class="plan-price">$99.99<span>/mo</span></div>
+    </div>
+  </div>
+
+  <!-- BONUS SECTION -->
+  <div id="bonusSection" class="bonus-section">
+    <div class="bonus-title">Boostez votre expérience</div>
+    <div class="bonus-options">
+      <div class="bonus-item">
+        <div class="bonus-check">
+          <input type="checkbox" id="bonusAiCheckbox">
+          <label for="bonusAiCheckbox">🤖 AI Calorie Tracking</label>
+        </div>
+        <div class="bonus-controls">
+          <div class="bonus-control-group">
+            <span>Durée:</span>
+            <input type="range" id="bonusAiDuration" class="bonus-slider" min="1" max="3" value="1" step="1" disabled>
+            <span class="bonus-value" id="bonusAiValue">1 semaine</span>
+          </div>
+          <div class="bonus-price" id="bonusAiPrice">+$4.99</div>
+        </div>
+        <div class="bonus-note">Scan photo → analyse instantanée</div>
+      </div>
+
+      <div class="bonus-item">
+        <div class="bonus-check">
+          <input type="checkbox" id="bonusConsultCheckbox">
+          <label for="bonusConsultCheckbox">👩‍⚕️ Consultation personnalisée</label>
+        </div>
+        <div class="bonus-controls">
+          <div class="bonus-control-group">
+            <span>Nb séances:</span>
+            <input type="range" id="bonusConsultSessions" class="bonus-slider" min="1" max="4" value="1" step="1" disabled>
+            <span class="bonus-value" id="bonusConsultValue">1 séance</span>
+          </div>
+          <div class="bonus-price" id="bonusConsultPrice">+$19.99</div>
+        </div>
+        <div class="bonus-note">Suivi personnalisé avec expert</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="durationSection" class="duration-section" style="display: none;">
+    <div class="duration-label">
+      <span>Select duration</span>
+      <span id="durationDisplay">1 month</span>
+    </div>
+    <input type="range" id="durationSlider" class="duration-slider" min="1" max="6" value="1" step="1">
+    <div class="duration-value" id="durationValue">1 month</div>
+  </div>
+
+  <div class="selected-offer-card">
+    <div class="offer-name" id="selectedOfferName">No plan selected</div>
+    <div class="offer-price" id="selectedOfferPrice">$0</div>
+  </div>
+
+  <div class="payment-title">PAYMENT DETAILS</div>
+
+  <div class="form-group">
+    <label>Card Number</label>
+    <div class="input-wrapper">
+      <span class="input-icon">💳</span>
+      <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242">
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="form-group">
+      <label>Expiry Date</label>
+      <div class="input-wrapper">
+        <span class="input-icon">📅</span>
+        <input type="text" id="expiry" placeholder="MM/YY">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>CVC</label>
+      <div class="input-wrapper">
+        <span class="input-icon">🔒</span>
+        <input type="text" id="cvc" placeholder="123">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Name on Card</label>
+    <div class="input-wrapper">
+      <span class="input-icon">👤</span>
+      <input type="text" id="cardName" placeholder="John Doe">
+    </div>
+  </div>
+
+  <button class="pay-btn" id="payBtn">
+    🔒 Pay Now — <span id="payBtnPrice">$0</span>
+  </button>
+
+  <div class="security-badge">
+    <span>🔒 Secure payment • SSL encrypted</span>
+    <span>💳 3D Secure</span>
+  </div>
+
+  <button class="free-trial-btn" id="freeTrialBottomBtn">
+    📌 Book Free Trial Consultation →
+  </button>
+</div>
+
+<div class="toast-msg" id="toastMsg"></div>
+
+<script>
+  // === Fonctions utilitaires ===
+  function getCSRFToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, 10) === 'csrftoken=') {
+          cookieValue = decodeURIComponent(cookie.substring(10));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.className = `toast-msg ${isError ? 'error' : ''}`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+  
+  function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/[&<>]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          return m;
+      });
+  }
+  
+  // === REDIRECTION VERS TRIAL PAGE ===
+  function redirectToTrialPage() {
+    showToast("🎉 Redirecting to free trial booking...");
+    setTimeout(() => {
+      window.location.href = '/trial-consultation/';
+    }, 800);
+  }
+  
+  // Ajouter les écouteurs pour les deux boutons (haut et bas)
+  document.getElementById('freeTrialTopBtn').addEventListener('click', redirectToTrialPage);
+  document.getElementById('freeTrialBottomBtn').addEventListener('click', redirectToTrialPage);
+  
+  // === LOGIQUE DE PAIEMENT EXISTANTE ===
+  let selectedPlan = null;
+  let selectedPlanPrice = 0;
+  let selectedPlanType = 'standard';
+  let duration = 1;
+  let currentTab = 'standard';
+  
+  let bonusAi = { active: false, weeks: 1, pricePerWeek: 4.99 };
+  let bonusConsult = { active: false, sessions: 1, pricePerSession: 19.99 };
+  
+  const bonusAiCheck = document.getElementById('bonusAiCheckbox');
+  const bonusAiSlider = document.getElementById('bonusAiDuration');
+  const bonusAiValue = document.getElementById('bonusAiValue');
+  const bonusAiPrice = document.getElementById('bonusAiPrice');
+  const bonusConsultCheck = document.getElementById('bonusConsultCheckbox');
+  const bonusConsultSlider = document.getElementById('bonusConsultSessions');
+  const bonusConsultValue = document.getElementById('bonusConsultValue');
+  const bonusConsultPrice = document.getElementById('bonusConsultPrice');
+  
+  function calculateBonusTotal() {
+    let total = 0;
+    if (bonusAi.active) total += bonusAi.weeks * bonusAi.pricePerWeek;
+    if (bonusConsult.active) total += bonusConsult.sessions * bonusConsult.pricePerSession;
+    return total;
+  }
+  
+  function updateTotal() {
+    let total = selectedPlanPrice;
+    if (selectedPlanType === 'premium') {
+      total = selectedPlanPrice * duration;
+    }
+    total += calculateBonusTotal();
+    document.getElementById('selectedOfferPrice').innerHTML = `$${total.toFixed(2)}`;
+    document.getElementById('payBtnPrice').innerHTML = `$${total.toFixed(2)}`;
+    return total;
+  }
+  
+  bonusAiCheck.addEventListener('change', () => {
+    bonusAi.active = bonusAiCheck.checked;
+    bonusAiSlider.disabled = !bonusAi.active;
+    if (bonusAi.active) {
+      bonusAi.weeks = parseInt(bonusAiSlider.value);
+      bonusAiValue.innerText = `${bonusAi.weeks} semaine${bonusAi.weeks > 1 ? 's' : ''}`;
+      bonusAiPrice.innerText = `+$${(bonusAi.weeks * bonusAi.pricePerWeek).toFixed(2)}`;
+    } else {
+      bonusAiPrice.innerText = `+$0`;
+    }
+    updateTotal();
+  });
+  
+  bonusAiSlider.addEventListener('input', () => {
+    bonusAi.weeks = parseInt(bonusAiSlider.value);
+    bonusAiValue.innerText = `${bonusAi.weeks} semaine${bonusAi.weeks > 1 ? 's' : ''}`;
+    bonusAiPrice.innerText = `+$${(bonusAi.weeks * bonusAi.pricePerWeek).toFixed(2)}`;
+    updateTotal();
+  });
+  
+  bonusConsultCheck.addEventListener('change', () => {
+    bonusConsult.active = bonusConsultCheck.checked;
+    bonusConsultSlider.disabled = !bonusConsult.active;
+    if (bonusConsult.active) {
+      bonusConsult.sessions = parseInt(bonusConsultSlider.value);
+      bonusConsultValue.innerText = `${bonusConsult.sessions} séance${bonusConsult.sessions > 1 ? 's' : ''}`;
+      bonusConsultPrice.innerText = `+$${(bonusConsult.sessions * bonusConsult.pricePerSession).toFixed(2)}`;
+    } else {
+      bonusConsultPrice.innerText = `+$0`;
+    }
+    updateTotal();
+  });
+  
+  bonusConsultSlider.addEventListener('input', () => {
+    bonusConsult.sessions = parseInt(bonusConsultSlider.value);
+    bonusConsultValue.innerText = `${bonusConsult.sessions} séance${bonusConsult.sessions > 1 ? 's' : ''}`;
+    bonusConsultPrice.innerText = `+$${(bonusConsult.sessions * bonusConsult.pricePerSession).toFixed(2)}`;
+    updateTotal();
+  });
+  
+  // Tab switching
+  document.querySelectorAll('.plan-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.dataset.planType;
+      
+      if (currentTab === 'standard') {
+        document.getElementById('standardPlans').style.display = 'flex';
+        document.getElementById('premiumPlans').style.display = 'none';
+        document.getElementById('durationSection').style.display = 'none';
+        document.getElementById('bonusSection').style.display = 'block';
+        selectedPlanType = 'standard';
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+        selectedPlan = null;
+        document.getElementById('selectedOfferName').innerHTML = 'No plan selected';
+        updateTotal();
+      } else {
+        document.getElementById('standardPlans').style.display = 'none';
+        document.getElementById('premiumPlans').style.display = 'flex';
+        document.getElementById('durationSection').style.display = 'block';
+        document.getElementById('bonusSection').style.display = 'none';
+        bonusAi.active = false;
+        bonusConsult.active = false;
+        bonusAiCheck.checked = false;
+        bonusConsultCheck.checked = false;
+        bonusAiSlider.disabled = true;
+        bonusConsultSlider.disabled = true;
+        bonusAiPrice.innerText = `+$0`;
+        bonusConsultPrice.innerText = `+$0`;
+        selectedPlanType = 'premium';
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+        selectedPlan = null;
+        document.getElementById('selectedOfferName').innerHTML = 'No plan selected';
+        updateTotal();
+      }
+    });
+  });
+  
+  // Select plan
+  document.querySelectorAll('.plan-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPlan = card.dataset.planName;
+      selectedPlanPrice = parseFloat(card.dataset.planPrice);
+      selectedPlanType = card.dataset.planType;
+      document.getElementById('selectedOfferName').innerHTML = selectedPlan;
+      updateTotal();
+    });
+  });
+  
+  const slider = document.getElementById('durationSlider');
+  const durationDisplay = document.getElementById('durationDisplay');
+  const durationValue = document.getElementById('durationValue');
+  
+  slider.addEventListener('input', () => {
+    duration = parseInt(slider.value);
+    durationDisplay.innerText = `${duration} month${duration > 1 ? 's' : ''}`;
+    durationValue.innerText = `${duration} month${duration > 1 ? 's' : ''}`;
+    if (selectedPlanType === 'premium') {
+      updateTotal();
+    }
+  });
+  
+  // ============ PAYMENT - VERSION UNIQUE ET CORRECTE ============
+  document.getElementById('payBtn').addEventListener('click', async () => {
+    if (!selectedPlan) {
+      showToast("Please select a plan first", true);
+      return;
+    }
+    
+    const cardNumber = document.getElementById('cardNumber').value;
+    const expiry = document.getElementById('expiry').value;
+    const cvc = document.getElementById('cvc').value;
+    const cardName = document.getElementById('cardName').value;
+    
+    if (!cardNumber || !expiry || !cvc || !cardName) {
+      showToast("Please fill all payment details", true);
+      return;
+    }
+    
+    const total = updateTotal();
+    
+    // DÉTERMINER CE QUE L'UTILISATEUR A CHOISI
+    const isPremium = selectedPlanType === 'premium';
+    const hasBonusAi = bonusAi.active;
+    const hasBonusConsult = bonusConsult.active;
+    
+    // Pour les plans standard, déterminer le type de package
+    let packageType = 'standard_simple';
+    if (!isPremium) {
+      if (hasBonusAi && hasBonusConsult) {
+        packageType = 'standard_with_both';
+      } else if (hasBonusAi) {
+        packageType = 'standard_with_ai';
+      } else if (hasBonusConsult) {
+        packageType = 'standard_with_consult';
+      } else {
+        packageType = 'standard_simple';
+      }
+    } else {
+      packageType = 'premium';
+    }
+    
+    showToast("Processing payment...");
+    
+    try {
+      const response = await fetch('/api/users/complete-payment/', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+          plan_name: selectedPlan,
+          amount: total,
+          duration_months: duration,
+          plan_type: selectedPlanType,
+          package_type: packageType,
+          bonus_ai: bonusAi.active ? { active: true, weeks: bonusAi.weeks, price: bonusAi.weeks * bonusAi.pricePerWeek } : null,
+          bonus_consultation: bonusConsult.active ? { active: true, sessions: bonusConsult.sessions, price: bonusConsult.sessions * bonusConsult.pricePerSession } : null
+        }),
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        showToast("✅ Payment successful!");
+        
+        // REDIRECTION CONDITIONNELLE
+        if (packageType === 'standard_simple') {
+          setTimeout(() => {
+            window.location.href = '/home.html';
+          }, 500);
+        } else if (packageType === 'standard_with_consult' || packageType === 'standard_with_ai' || packageType === 'standard_with_both') {
+          sessionStorage.setItem('pending_package', JSON.stringify({
+            type: packageType,
+            has_ai: hasBonusAi,
+            has_consult: hasBonusConsult,
+            plan_name: selectedPlan
+          }));
+          setTimeout(() => {
+            window.location.href = '/simple-consultation/';
+          }, 500);
+        } else if (packageType === 'premium') {
+          setTimeout(() => {
+            window.location.href = '/select-nutri/';
+          }, 1500);
+        }
+      } else {
+        showToast(data.error || "Payment failed", true);
+      }
+    } catch (err) {
+      console.error('Payment error:', err);
+      showToast("Network error. Please try again.", true);
+    }
+  });
+  
+  // === FIN DU BLOC PAYMENT ===
+  
+  // Vérification d'authentification
+  async function checkAuth() {
+    try {
+      const response = await fetch('/api/users/my-plan/', { credentials: 'include' });
+      if (response.status === 401) {
+        showToast("You are not logged in. Redirecting to login...", true);
+        setTimeout(() => window.location.href = '/login/', 2000);
+      }
+    } catch (err) {
+      console.error('Auth check error:', err);
+    }
+  }
+  
+  // === CHARGER LES PLANS STANDARD APPROUVÉS PAR L'ADMIN ===
+  function loadApprovedStandardPlans() {
+      const approvedPlans = JSON.parse(localStorage.getItem('approved_standard_plans') || '[]');
+      const standardPlansContainer = document.getElementById('standardPlans');
+      
+      if (approvedPlans.length > 0) {
+          standardPlansContainer.innerHTML = '';
+          
+          approvedPlans.forEach(plan => {
+              const planCard = document.createElement('div');
+              planCard.className = 'plan-card';
+              planCard.setAttribute('data-plan-name', plan.name);
+              planCard.setAttribute('data-plan-price', plan.price);
+              planCard.setAttribute('data-plan-type', 'standard');
+              planCard.setAttribute('data-plan-id', plan.id);
+              planCard.innerHTML = `
+                  <div class="plan-info">
+                      <h4>${escapeHtml(plan.name)}</h4>
+                      <p>${plan.duration_weeks} weeks program - Approved by admin</p>
+                  </div>
+                  <div class="plan-price">$${parseFloat(plan.price).toFixed(2)}<span>/mo</span></div>
+              `;
+              planCard.addEventListener('click', () => selectPlan(planCard));
+              standardPlansContainer.appendChild(planCard);
+          });
+          
+          const defaultPlans = [
+              { name: "30-Day Metabolic Weight Loss", price: 49.99, id: "default1" },
+              { name: "Muscle Builder Pro", price: 38, id: "default2" }
+          ];
+          
+          defaultPlans.forEach(plan => {
+              const planCard = document.createElement('div');
+              planCard.className = 'plan-card';
+              planCard.setAttribute('data-plan-name', plan.name);
+              planCard.setAttribute('data-plan-price', plan.price);
+              planCard.setAttribute('data-plan-type', 'standard');
+              planCard.innerHTML = `
+                  <div class="plan-info">
+                      <h4>${escapeHtml(plan.name)}</h4>
+                      <p>Popular plan</p>
+                  </div>
+                  <div class="plan-price">$${plan.price}<span>/mo</span></div>
+              `;
+              planCard.addEventListener('click', () => selectPlan(planCard));
+              standardPlansContainer.appendChild(planCard);
+          });
+      }
+      
+      document.querySelectorAll('.plan-card').forEach(card => {
+          card.addEventListener('click', () => selectPlan(card));
+      });
+  }
+  
+  function selectPlan(card) {
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPlan = card.dataset.planName;
+      selectedPlanPrice = parseFloat(card.dataset.planPrice);
+      selectedPlanType = card.dataset.planType;
+      document.getElementById('selectedOfferName').innerHTML = selectedPlan;
+      updateTotal();
+  }
+  
+  function loadPremiumPlans() {
+    const premiumPlans = JSON.parse(localStorage.getItem('premium_plans') || '[]');
+    const premiumPlansContainer = document.getElementById('premiumPlans');
+    
+    if (premiumPlans.length > 0) {
+        premiumPlansContainer.innerHTML = '';
+        
+        premiumPlans.forEach(plan => {
+            const planCard = document.createElement('div');
+            planCard.className = 'plan-card';
+            planCard.setAttribute('data-plan-name', plan.name);
+            planCard.setAttribute('data-plan-price', plan.price);
+            planCard.setAttribute('data-plan-type', 'premium');
+            planCard.setAttribute('data-plan-id', plan.id);
+            
+            let featuresHtml = '';
+            if (plan.features && plan.features.length > 0) {
+                featuresHtml = `<p style="font-size:0.65rem; margin-top:4px; color:#FF7A00;">✨ ${plan.features.slice(0,2).join(' • ')}</p>`;
+            }
+            
+            planCard.innerHTML = `
+                <div class="plan-info">
+                    <h4>⭐ ${escapeHtml(plan.name)}</h4>
+                    <p>${escapeHtml(plan.description || 'Premium plan created by admin')}</p>
+                    ${featuresHtml}
+                </div>
+                <div class="plan-price">$${parseFloat(plan.price).toFixed(2)}<span>/mo</span></div>
+            `;
+            planCard.addEventListener('click', () => selectPlan(planCard));
+            premiumPlansContainer.appendChild(planCard);
+        });
+    }
+    
+    const defaultPremiumPlans = [
+        { name: "Ultimate Wellness Premium", price: 79.99, features: ["Full access", "Priority support", "Unlimited consultations"] },
+        { name: "Elite Nutrition Pro", price: 99.99, features: ["Everything in Premium", "1-on-1 weekly coaching", "Custom meal plans"] }
+    ];
+    
+    defaultPremiumPlans.forEach(plan => {
+        const planCard = document.createElement('div');
+        planCard.className = 'plan-card';
+        planCard.setAttribute('data-plan-name', plan.name);
+        planCard.setAttribute('data-plan-price', plan.price);
+        planCard.setAttribute('data-plan-type', 'premium');
+        planCard.innerHTML = `
+            <div class="plan-info">
+                <h4>⭐ ${escapeHtml(plan.name)}</h4>
+                <p style="font-size:0.65rem; margin-top:4px; color:#FF7A00;">✨ ${plan.features.join(' • ')}</p>
+            </div>
+            <div class="plan-price">$${plan.price}<span>/mo</span></div>
+        `;
+        planCard.addEventListener('click', () => selectPlan(planCard));
+        premiumPlansContainer.appendChild(planCard);
+    });
+    
+    document.querySelectorAll('#premiumPlans .plan-card').forEach(card => {
+        card.addEventListener('click', () => selectPlan(card));
+    });
+  }
+  
+  // Initialisation
+  loadApprovedStandardPlans();
+  loadPremiumPlans();
+  checkAuth();
+  </script>
+</body>
+</html>

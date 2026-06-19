@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essai Gratuit — NutriLife</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:        #27AE60;
+  --green-light:  #2ECC71;
+  --green-pale:   #F0F8F3;
+  --orange:       #FF7A00;
+  --orange-light: #FF9A40;
+  --dark:         #0f172a;
+  --text-mid:     #475569;
+  --text-light:   #94a3b8;
+  --border:       rgba(39,174,96,0.15);
+}
+
+html, body { height: 100%; font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* LEFT SIDE */
+.benefits-side {
+  width: 52%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 44px 52px;
+}
+.brand-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+.brand-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(39,174,96,0.55) 0%, rgba(27,94,42,0.6) 100%),
+              radial-gradient(ellipse 65% 55% at 90% 10%, rgba(255,122,0,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.brand-logo {
+  position: relative; z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700;
+  color: white; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.brand-content {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 0;
+  max-width: 400px;
+}
+.brand-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.72);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px; border-radius: 40px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
+  width: fit-content;
+}
+.brand-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--orange-light); border-radius: 50%; }
+.brand-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 2.8vw, 46px);
+  font-weight: 900; color: #fff;
+  line-height: 1.12; margin-bottom: 16px;
+}
+.brand-content h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.brand-desc { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-bottom: 36px; max-width: 360px; }
+.feat-list { display: flex; flex-direction: column; gap: 10px; }
+.feat-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+.feat-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.feat-text strong { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.feat-text span { font-size: 11px; color: rgba(255,255,255,0.65); }
+.brand-float-card {
+  position: absolute; bottom: 44px; right: 28px; z-index: 5;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 18px;
+  padding: 16px 20px; text-align: center; min-width: 120px;
+  animation: floatY 5s ease-in-out infinite;
+}
+@keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.float-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.float-lbl { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.10em; text-transform: uppercase; margin-top: 4px; }
+.brand-footer { position: relative; z-index: 2; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 20px; }
+
+/* RIGHT SIDE */
+.form-side {
+  flex: 1;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 48px 56px;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+}
+.form-side::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--green));
+}
+.form-header { margin-bottom: 28px; text-align: center; }
+.form-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 900;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.form-header h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--orange), var(--green));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.form-header p { font-size: 14px; color: var(--text-mid); }
+
+/* Free Trial Info Box */
+.trial-info-box {
+  background: linear-gradient(135deg, #FFF8EB, #FFFAF0);
+  border: 2px solid var(--orange);
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.trial-info-box .icon { font-size: 32px; margin-bottom: 8px; }
+.trial-info-box h3 { color: var(--orange); margin-bottom: 8px; }
+.trial-info-box p { font-size: 13px; color: var(--text-mid); }
+
+/* Already Booked Card */
+.already-booked-card {
+  background: linear-gradient(135deg, #F0F8F3, #ffffff);
+  border: 2px solid var(--green);
+  border-radius: 24px;
+  padding: 28px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.already-booked-card .check-icon { font-size: 48px; margin-bottom: 12px; }
+.already-booked-card h3 { color: var(--green); margin-bottom: 16px; }
+.already-booked-card .trial-status {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 16px;
+  margin: 16px 0;
+  text-align: left;
+}
+.already-booked-card .status-pending { color: #f59e0b; }
+.already-booked-card .status-confirmed { color: var(--green); }
+.already-booked-card .status-completed { color: #3b82f6; }
+.already-booked-card .status-rejected { color: #dc2626; }
+
+/* Form Groups */
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: var(--dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.2s;
+  background: #fafbfc;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--green);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.1);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--green) 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(39,174,96,0.4);
+}
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid #e2e8f0;
+  color: var(--text-mid);
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-secondary:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+}
+
+.toast-msg {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #27AE60;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.toast-msg.show { opacity: 0.9; }
+.toast-msg.error { background: #dc2626; }
+
+@media (max-width: 1024px) {
+  .benefits-side { padding: 36px 32px; }
+  .form-side { padding: 40px 36px; }
+}
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .benefits-side { width: 100%; position: relative; height: auto; min-height: 50vh; padding: 32px 28px; }
+  .brand-float-card { display: none; }
+  .form-side { padding: 32px 28px; height: auto; overflow-y: visible; }
+}
+@media (max-width: 600px) {
+  .benefits-side { padding: 24px 20px; }
+  .form-side { padding: 24px 20px; }
+  .brand-content h1 { font-size: 24px; }
+  .form-header h2 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<div class="benefits-side">
+  <img class="brand-photo" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&q=85" alt="Healthy lifestyle">
+  <div class="brand-overlay"></div>
+  <a href="/" class="brand-logo">NutriLife 🍎</a>
+  <div class="brand-content">
+    <div class="brand-eyebrow">Free Trial</div>
+    <h1>Try before you <em>commit</em></h1>
+    <p class="brand-desc">Meet a certified nutritionist for free and discover how we can help you reach your health goals.</p>
+    <div class="feat-list">
+      <div class="feat-item"><div class="feat-icon">🎧</div><div class="feat-text"><strong>20-min Video Call</strong><span>Private consultation</span></div></div>
+      <div class="feat-item"><div class="feat-icon">📋</div><div class="feat-text"><strong>Personalized Assessment</strong><span>Get expert advice</span></div></div>
+      <div class="feat-item"><div class="feat-icon">💬</div><div class="feat-text"><strong>Q&A Session</strong><span>Ask anything</span></div></div>
+    </div>
+  </div>
+  <div class="brand-float-card"><div class="float-num">FREE</div><div class="float-lbl">Trial</div></div>
+  <div class="brand-footer">© 2026 NutriLife · Secure platform</div>
+</div>
+
+<div class="form-side">
+  <div class="form-header">
+    <h2>Book your <em>free trial</em> 🎧</h2>
+    <p>One free consultation per user — no credit card required</p>
+  </div>
+
+  <!-- Zone pour afficher le statut si déjà booké -->
+  <div id="alreadyBookedContainer" style="display: none;">
+    <div class="already-booked-card">
+      <div class="check-icon">✅</div>
+      <h3>You've already booked your free trial!</h3>
+      <div class="trial-status" id="trialStatusDetails">
+        <p><strong>📅 Date:</strong> <span id="trialDate"></span></p>
+        <p><strong>👩‍⚕️ Nutritionist:</strong> <span id="trialNutritionist"></span></p>
+        <p><strong>📌 Status:</strong> <span id="trialStatus"></span></p>
+      </div>
+      <p style="font-size: 13px; color: var(--text-mid); margin-top: 16px;">
+        Only one trial per user is allowed. You can still purchase a full plan!
+      </p>
+      <button class="btn-secondary" id="backToPaymentBtn">← Back to Payment</button>
+    </div>
+  </div>
+
+  <!-- Formulaire de réservation (caché si déjà booké) -->
+  <div id="bookingFormContainer">
+    <div class="trial-info-box">
+      <div class="icon">🎧</div>
+      <h3>Free 20-minute consultation</h3>
+      <p>Choose a date, time, and your preferred nutritionist. The nutritionist will receive your request and confirm within 24h.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Select a date</label>
+      <input type="date" id="trialDateInput" min="">
+    </div>
+
+    <div class="form-group">
+      <label>Select a time</label>
+      <select id="trialTimeSelect">
+        <option value="09:00">09:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="14:00">02:00 PM</option>
+        <option value="15:00">03:00 PM</option>
+        <option value="16:00">04:00 PM</option>
+        <option value="17:00">05:00 PM</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Choose a nutritionist</label>
+      <select id="nutritionistSelect">
+        <option value="">-- Any available nutritionist --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>What would you like to discuss? (optional)</label>
+      <textarea id="trialNotes" rows="3" placeholder="e.g., Weight loss, muscle gain, eating habits, health concerns..."></textarea>
+    </div>
+
+    <button class="btn-primary" id="bookTrialBtn">
+      📌 Book Free Trial →
+    </button>
+
+    <button class="btn-secondary" id="backToPaymentBtn2">
+      ← Back to Payment
+    </button>
+
+    <div class="security-badge">
+      <span>🔒 Free • No commitment</span>
+      <span>👩‍⚕️ Certified nutritionists</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast-msg" id="toastMsg"></div>
+
+<script>
+function showToast(msg, isError = false) {
+  const toast = document.getElementById('toastMsg');
+  toast.textContent = msg;
+  toast.className = `toast-msg ${isError ? 'error' : ''}`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function getCSRFToken() {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith('csrftoken=')) {
+        cookieValue = decodeURIComponent(cookie.substring(10));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// Set min date to today
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+document.getElementById('trialDateInput').min = `${yyyy}-${mm}-${dd}`;
+document.getElementById('trialDateInput').value = `${yyyy}-${mm}-${dd}`;
+
+// Load nutritionists
+async function loadNutritionists() {
+  try {
+    const response = await fetch('/api/consultations/nutritionists/', {
+      credentials: 'include',
+      headers: { 'X-CSRFToken': getCSRFToken() }
+    });
+    if (response.ok) {
+      const nutritionists = await response.json();
+      const select = document.getElementById('nutritionistSelect');
+      nutritionists.forEach(nut => {
+        const option = document.createElement('option');
+        option.value = nut.id;
+        option.textContent = `${nut.name} - ${nut.specialization || 'Nutritionist'}`;
+        select.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error('Error loading nutritionists:', err);
+  }
+}
+
+// Check if user already booked a trial
+async function checkTrialStatus() {
+    try {
+      const response = await fetch('/api/consultations/trial-status/', {
+        credentials: 'include',
+        headers: { 'X-CSRFToken': getCSRFToken() }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.has_booked_trial && data.trial_info) {
+          // Hide booking form, show already booked card
+          document.getElementById('bookingFormContainer').style.display = 'none';
+          document.getElementById('alreadyBookedContainer').style.display = 'block';
+          
+          // Fill trial details with safe fallbacks
+          const trialInfo = data.trial_info;
+          
+          // Format date if exists
+          let dateDisplay = 'Pending';
+          if (trialInfo.date) {
+            dateDisplay = trialInfo.date;
+          } else if (trialInfo.created_at) {
+            dateDisplay = new Date(trialInfo.created_at).toLocaleDateString();
+          }
+          document.getElementById('trialDate').textContent = dateDisplay;
+          
+          // Nutritionist name
+          const nutriName = trialInfo.nutritionist_name || 'Awaiting assignment';
+          document.getElementById('trialNutritionist').textContent = nutriName;
+          
+          // Status
+          const statusEl = document.getElementById('trialStatus');
+          let statusText = '';
+          let statusClass = '';
+          
+          switch(trialInfo.status) {
+            case 'pending':
+              statusText = '⏳ Awaiting nutritionist confirmation';
+              statusClass = 'status-pending';
+              break;
+            case 'confirmed':
+              statusText = '✅ Confirmed! The nutritionist will contact you.';
+              statusClass = 'status-confirmed';
+              break;
+            case 'completed':
+              statusText = '✓ Consultation completed';
+              statusClass = 'status-completed';
+              break;
+            case 'rejected':
+              statusText = '❌ Rejected. Please contact support.';
+              statusClass = 'status-rejected';
+              break;
+            default:
+              statusText = '📋 Request sent, waiting for response';
+              statusClass = 'status-pending';
+          }
+          
+          statusEl.innerHTML = statusText;
+          statusEl.className = statusClass;
+          
+          // Afficher un toast de confirmation
+          showToast("You have already booked your free trial!", false);
+        }
+      }
+    } catch (err) {
+      console.error('Error checking trial status:', err);
+    }
+  }
+
+  
+// Book trial
+document.getElementById('bookTrialBtn').addEventListener('click', async () => {
+  const date = document.getElementById('trialDateInput').value;
+  const time = document.getElementById('trialTimeSelect').value;
+  const nutritionistId = document.getElementById('nutritionistSelect').value;
+  const notes = document.getElementById('trialNotes').value;
+
+  if (!date) {
+    showToast("Please select a date", true);
+    return;
+  }
+
+  showToast("Booking your free trial...");
+
+  try {
+    const response = await fetch('/api/consultations/book-trial/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRFToken()
+      },
+      body: JSON.stringify({
+        slot_date: date,
+        slot_time: time,
+        nutritionist_id: nutritionistId || null,
+        notes: notes
+      }),
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      showToast("✅ Free trial requested! The nutritionist will confirm soon.");
+      // Reload to show the already booked card
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } else if (data.already_booked) {
+      showToast(data.error, true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      showToast(data.error || "Booking failed", true);
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    showToast("Network error. Please try again.", true);
+  }
+});
+
+// Back to payment buttons
+document.getElementById('backToPaymentBtn').addEventListener('click', () => {
+  window.location.href = '/payment/';
+});
+document.getElementById('backToPaymentBtn2').addEventListener('click', () => {
+  window.location.href = '/payment/';
+});
+
+// Initialize
+loadNutritionists();
+checkTrialStatus();
+</script>
+</body>
+</html>
