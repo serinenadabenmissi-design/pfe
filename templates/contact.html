@@ -1000,18 +1000,20 @@ nav {
 </head>
 <body>
 
-<!-- ═══ NAVBAR ═══ -->
+<!-- Navbar -->
 <header class="navbar">
   <a href="{% url 'home' %}" class="logo">NutriLife 🍎</a>
+  
   <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  
   <nav id="navMenu">
-    <a href="{% url 'home' %}">Home</a>
-    <a href="{% url 'about' %}">About Us</a>
-    <a href="{% url 'contact' %}"class="active">Contact Us</a>
-    <a href="{% url 'blog' %}">Blog</a>
-   
+      <a href="{% url 'home' %}" >Home</a>
+      <a href="{% url 'about' %}">About Us</a>
+      <a href="{% url 'contact' %}" class="active">Contact Us</a>
+      <a href="{% url 'blog' %}">Blog</a>
   </nav>
-  <button class="book-btn"><a href="{% url 'login' %}">Book Consultation</a></button>
+
+  <button class="book-btn" onclick="window.location.href='{% url 'login' %}'"><a href="{% url 'login' %}">Book Consultation</a></button>
 </header>
 
 <!-- ═══ HERO ═══ -->

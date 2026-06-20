@@ -10,7 +10,13 @@ SECRET_KEY = 'django-insecure-ton-une-secrete-key'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ai-nutritionist-lsha.onrender.com']
+# ✅ CORRECTION : Ajoutez le domaine Render correctement
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'ai-nutritionist-lsha.onrender.com',  # ← Sans http://
+    '.onrender.com',  # ← Permet tous les sous-domaines Render
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -37,7 +43,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # ← Commenté pour développement
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -99,19 +105,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# core/settings.py
-AUTH_USER_MODEL = 'accounts.CustomUser'  # ← TRÈS IMPORTANT
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_SECURE = False  # False en développement (HTTP)
+# ✅ CORRECTION : Ajoutez le domaine Render pour CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'https://ai-nutritionist-lsha.onrender.com',  # ← HTTPS (Render utilise HTTPS)
+]
+
+SESSION_COOKIE_SECURE = True  # ✅ True en production (HTTPS)
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
-# CSRF settings (pour développement)
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
-CSRF_COOKIE_SECURE = False
+
+CSRF_COOKIE_SECURE = True  # ✅ True en production (HTTPS)
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 
@@ -125,5 +136,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
-# Ajoutez ceci dans core/settings.py (à la fin du fichier)
+
 LOGIN_URL = '/login/'
